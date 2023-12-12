@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,7 +28,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -40,6 +41,10 @@ Route::middleware('auth')->group(function () {
     // Route::get('/pages/sportAndAchievment', [PageController::class, 'index'])->name('sportAndAchievment.index');
     // Route::get('/pages/education', [PageController::class, 'index'])->name('education.index');
     // Route::get('/pages/activity', [PageController::class, 'index'])->name('activity.index');
+
+
+    Route::get('/student', [StudentController::class, 'index'])->name('student.index');
+    Route::get('/student/add', [StudentController::class, 'create'])->name('student.create');
 });
 
 require __DIR__ . '/auth.php';

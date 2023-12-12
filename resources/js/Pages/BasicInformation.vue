@@ -1,12 +1,14 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import NavForPages from '@/Layouts/NavForPages.vue';
 import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Basic Information" />
 
     <AuthenticatedLayout>
+        <NavForPages></NavForPages>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Basic Information</h2>
         </template>
