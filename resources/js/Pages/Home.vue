@@ -18,15 +18,24 @@ import { Head, Link } from '@inertiajs/vue3';
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div>
-                            <Link :href="route('student.index')" method="get" as="button">Search Student
+                            <Link :href="route('student.searchStudent')" method="get" as="button">Search Student
+                            </Link>
+                        </div>
+                        <div>
+                            <Link :href="route('student.viewAddStudentForm')" method="get" as="button">Add New Student
                             </Link>
                         </div>
                         <!-- <div>
-                            <Link :href="route('student.create')" method="get" as="button">Add New Student
+                            <Link :href="route('student.index')" method="get" as="button"> Student List
+                            </Link>
+                        </div> -->
+                        <!-- <div>
+                            <Link :href="route('student.viewAddStudentForm', { studentId: student.id })" method="get"
+                                as="button">Add New Student
                             </Link>
                         </div> -->
 
-                        <div>Add new Student</div>
+                        <!-- <div>Add new Student</div> -->
                         <div>Basic Information</div>
                         <div>Students Unions</div>
                         <div>Activities</div>

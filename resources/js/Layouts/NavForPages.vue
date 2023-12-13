@@ -1,6 +1,13 @@
 <script setup>
 import NavLink from '@/Components/NavLink.vue';
+
+defineProps({
+    studentId: {
+        type: Number
+    }
+})
 </script>
+
 
 <template>
     <!-- Navigation Links -->
@@ -8,19 +15,20 @@ import NavLink from '@/Components/NavLink.vue';
         <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
             Home
         </NavLink>
-        <NavLink :href="route('student.index')" :active="route().current('student.index')">
+        <NavLink :href="route('student.show', { studentId: studentId })"
+            :active="route().current('student.show', { studentId: studentId })">
             Basic Information
         </NavLink>
-        <NavLink :href="route('dashboard')" :active="route().current('student.index')">
+        <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
             Student Union
         </NavLink>
-        <NavLink :href="route('dashboard')" :active="route().current('student.index')">
+        <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
             Sport & Achievements
         </NavLink>
-        <NavLink :href="route('dashboard')" :active="route().current('student.index')">
+        <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
             Education
         </NavLink>
-        <NavLink :href="route('dashboard')" :active="route().current('student.index')">
+        <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
             Activity
         </NavLink>
     </div>

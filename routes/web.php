@@ -43,8 +43,16 @@ Route::middleware('auth')->group(function () {
     // Route::get('/pages/activity', [PageController::class, 'index'])->name('activity.index');
 
 
-    Route::get('/student', [StudentController::class, 'index'])->name('student.index');
-    Route::get('/student/add', [StudentController::class, 'create'])->name('student.create');
+    Route::get('/student/{studentId}/show', [StudentController::class, 'show'])->name('student.show');
+    //Route::get('/student', [StudentController::class, 'index'])->name('student.index');
+    Route::get('/student/viewAddStudentForm', [StudentController::class, 'viewAddStudentForm'])->name('student.viewAddStudentForm');
+    Route::get('/student/searchStudent', [StudentController::class, 'searchStudent'])->name('student.searchStudent');
+    Route::get('/student/{studentId}/edit', [StudentController::class, 'edit'])->name('student.edit');
+    Route::put('/student/{studentId}/update', [StudentController::class, 'update'])->name('student.update');
+
+    Route::delete('/student/{studentId}/destroy', [StudentController::class, 'destroy'])->name('student.destroy');
+
+    Route::post('/student/store', [StudentController::class, 'store'])->name('student.store');
 });
 
 require __DIR__ . '/auth.php';
