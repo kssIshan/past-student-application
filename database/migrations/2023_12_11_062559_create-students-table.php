@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('dob');
             $table->string('date_of_admission');
-            $table->string('date_of_leave');
-            $table->string('address');
-            $table->string('email');
-            $table->string('mobile_no');
-            $table->string('land_no');
-            $table->rememberToken();
+            $table->string('date_of_leave')->nullable();
+            $table->string('address')->nullable();;
+            $table->string('email')->nullable();;
+            $table->string('mobile_no')->nullable();;
+            $table->string('land_no')->nullable();;
+            $table->softDeletes();
             $table->timestamps();
         });
     }
