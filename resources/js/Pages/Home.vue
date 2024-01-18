@@ -15,49 +15,74 @@ import { Head, Link } from '@inertiajs/vue3';
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">
-                        <div>
-                            <Link :href="route('student.searchStudent')" method="get" as="button">Search Student
-                            </Link>
-                        </div>
-                        <div>
-                            <Link :href="route('student.viewAddStudentForm')" method="get" as="button">Add New Student
-                            </Link>
-                        </div>
-                        <!-- <div>
-                            <Link :href="route('student.index')" method="get" as="button"> Student List
-                            </Link>
-                        </div> -->
-                        <!-- <div>
-                            <Link :href="route('student.viewAddStudentForm', { studentId: student.id })" method="get"
-                                as="button">Add New Student
-                            </Link>
-                        </div> -->
 
-                        <!-- <div>Add new Student</div> -->
-                        <div>Basic Information</div>
-                        <div>Students Unions</div>
-                        <div>Activities</div>
-                        <div>Education</div>
-                        <div>Sports and Achievements</div>
-                        <div>Setting</div>
 
-                        <!-- <div>
-                            <Link :href="route('dashboard')" method="get" as="button">Student Union</Link>
-                        </div>
-                        <div>
-                            <Link :href="route('dashboard')" method="get" as="button">Sport & Achievements</Link>
-                        </div>
-                        <div>
-                            <Link :href="route('dashboard')" method="get" as="button">Education</Link>
-                        </div>
-                        <div>
-                            <Link :href="route('dashboard')" method="get" as="button">Activity</Link>
-                        </div> -->
+                <div class="flex items-center justify-between bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mb-4">
+                    <div class="bg-blue-200 p-4  mr-4 w-64 h-24">
+                        <Link :href="route('student.searchStudent')" method="get" as="button">
+                        Search Student
+                        </Link>
+                    </div>
+                    <div class="bg-green-200 p-4  mr-4 w-60 h-24">
+                        <Link :href="route('student.viewAddStudentForm')" method="get" as="button">
+                        Add New Student
+                        </Link>
+                    </div>
+                    <div class="bg-yellow-200 p-4  mr-4 w-64 h-24">
+                        Basic Information
                     </div>
                 </div>
+
+
+                <div class="flex flex-wrap bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
+
+                    <!-- Column 1 -->
+
+                    <div class="flex flex-wrap bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
+
+                        <!-- Cell 1 -->
+                        <div class="w-full sm:w-1/2 lg:w-1/2 p-6">
+                            <div>
+                                Students Unions
+                            </div>
+                        </div>
+
+                        <!-- Cell 2 -->
+                        <div class="w-full sm:w-1/2 lg:w-1/2 p-6">
+                            <div>
+                                Activities
+                            </div>
+                        </div>
+
+                        <!-- Cell 3 -->
+                        <div class="w-full sm:w-1/2 lg:w-1/2 p-6">
+                            <div>
+                                Education
+                            </div>
+                        </div>
+
+                        <!-- Cell 4 -->
+                        <div class="w-full sm:w-1/2 lg:w-1/2 p-6">
+                            <div>
+                                Setting
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Column 2 -->
+                    <div class="w-full sm:w-1/2 lg:w-1/3 p-6">
+                        <div>
+                            Sports and Achievements
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
+
+
     </AuthenticatedLayout>
 </template>

@@ -22,6 +22,7 @@ class StudentUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'reg_no' => 'required|unique:students,reg_no',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'dob' => 'required|date',
