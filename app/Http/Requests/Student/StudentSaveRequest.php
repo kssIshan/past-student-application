@@ -24,6 +24,7 @@ class StudentSaveRequest extends FormRequest
         return [
             //'uuid',
             //'user_id',
+            'reg_no' => 'required|unique:students,reg_no',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'dob' => 'required|date',

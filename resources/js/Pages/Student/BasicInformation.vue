@@ -7,9 +7,6 @@ defineProps({
     student: {
         type: Object
     },
-    // students: {
-    //     type: Array
-    // },
 
 });
 </script>
@@ -18,7 +15,7 @@ defineProps({
     <Head title="Basic Information" />
 
     <AuthenticatedLayout>
-        <NavForPages :student-id="student.id"></NavForPages>
+        <NavForPages :student="student"></NavForPages>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Basic Information</h2>
         </template>
@@ -29,6 +26,7 @@ defineProps({
                     <div class="p-6 text-gray-900">Basic information</div>
                     <!-- {{ student }} -->
                     <div>{{ student.id }}</div>
+                    <div>{{ student.reg_no }}</div>
                     <div>{{ student.first_name }}</div>
                     <div>{{ student.last_name }}</div>
                     <div>{{ student.dob }}</div>

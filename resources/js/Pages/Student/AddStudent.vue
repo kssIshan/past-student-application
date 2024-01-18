@@ -9,6 +9,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 
 const form = useForm({
+    reg_no: "",
     first_name: "",
     last_name: "",
     dob: '',
@@ -39,7 +40,12 @@ const form = useForm({
                     <form @submit.prevent="form.post(route('student.store'))" class="mt-6 space-y-6">
 
                         <div>
-                            <InputLabel for="last_name" value="Fast Name" />
+                            <InputLabel for="reg_no" value="Registration no" />
+                            <input type="text" id="reg_no" v-model="form.reg_no" />
+                            <InputError class="mt-2" :message="form.errors.reg_no" />
+                        </div>
+                        <div>
+                            <InputLabel for="firstName" value="Fast Name" />
                             <input type="text" id="firstName" v-model="form.first_name" />
                             <InputError class="mt-2" :message="form.errors.first_name" />
                         </div>

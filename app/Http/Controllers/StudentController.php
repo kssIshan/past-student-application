@@ -18,13 +18,32 @@ class StudentController extends Controller
     //     return Inertia::render("Student/BasicInformation", ['students' => $students]);
     // }
 
-    //get basic information of searched student
-    public function show(int $studentId)
+    //get basic information of searched student by registration no.
+    public function show(int $regNo)
     {
-        $student = Student::findOrFail($studentId);
+        $student = Student::where('reg_no', $regNo)->first();
+
+        /* if ($student) {
+            //return response()->json(['data' => $student], 200);
+            return Inertia::render("Student/BasicInformation", ['student' => $student]);
+        } else {
+            return Inertia::render("Student/SearchStudent");
+        }*/
+        //$student = Student::findOrFail($regNo);
 
         return Inertia::render("Student/BasicInformation", ['student' => $student]);
     }
+    public function showbyName(string $firstName, string $lastName)
+    {
+        $students = Student::where('first_name', $firstName)
+            ->where('last_name', $lastName)
+            ->get();
+
+
+        // return Inertia::render("Student/BasicInformation", ['students' => $students]);
+        return response()->json(['students' => $students]);
+    }
+
     public function viewAddStudentForm()
     {
         return Inertia::render("Student/AddStudent");
@@ -43,6 +62,7 @@ class StudentController extends Controller
         Student::create([
             'uuid' => $uuid,
             'user_id' => $id,
+            'reg_no' => $request->input('reg_no'),
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'dob' => $request->input('dob'),
@@ -72,6 +92,7 @@ class StudentController extends Controller
         $student->update([
             'uuid' => $uuid,
             'user_id' => $id,
+            'reg_no' => $request->input('reg_no'),
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'dob' => $request->input('dob'),

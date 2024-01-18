@@ -11,6 +11,7 @@ const props = defineProps({
 });
 
 const form = useForm({
+    reg_no: props.student.reg_no,
     first_name: props.student.first_name,
     last_name: props.student.last_name,
     dob: props.student.dob,
@@ -35,7 +36,12 @@ const form = useForm({
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div>
-                                <InputLabel for="last_name" value="Fast Name" />
+                                <InputLabel for="reg_no" value="Registration no" />
+                                <input type="text" id="reg_no" v-model="form.reg_no" />
+                                <InputError class="mt-2" :message="form.errors.reg_no" />
+                            </div>
+                            <div>
+                                <InputLabel for="firstName" value="Fast Name" />
                                 <input type="text" id="firstName" v-model="form.first_name" />
                                 <InputError class="mt-2" :message="form.errors.first_name" />
                             </div>
