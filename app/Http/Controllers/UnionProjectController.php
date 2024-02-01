@@ -55,7 +55,8 @@ class UnionProjectController extends Controller
                         $projects[] = $project;
                     }
                 }
-                return Inertia::render("Union/UnionProjectDetails", ['projects' => $projects, 'union' => $union, 'student' => $student]);
+                $projectArray = Union::with('projects')->findOrFail($unionId);
+                return Inertia::render("Union/UnionProjectDetails", ['projects' => $projects, 'projectArray' => $projectArray, 'union' => $union, 'student' => $student]);
             }
             DB::commit();
         } catch (\Exception $e) {
@@ -124,7 +125,7 @@ class UnionProjectController extends Controller
 
                 //dd($result['project_id']);
                 //check the retrived array they carry null values there fore it throw 
-                //error when exam saved without values. so i used if statement to save results
+                //error when union saved without projects. so i used if statement to save results
                 if ($result['project_id'] !== null) {
                     $projectId = $result['project_id'];
                     //dd($projectId);
@@ -162,10 +163,10 @@ class UnionProjectController extends Controller
         } else {
             //
         }
-        $student->unions()->attach($unionId, $newStudentUnion);
+        //$student->unions()->attach($unionId, $newStudentUnion);
 
         //$student->programs()->attach($request->programs);
-        return redirect()->route('unionProject.create', $studentId);
+        return redirect()->route('union.index', $studentId);
     }
 
 
@@ -332,6 +333,7 @@ class UnionProjectController extends Controller
                 }
             }
         }
+        return redirect()->route('union.index', $studentId);
     }
 
     /**
@@ -346,6 +348,6 @@ class UnionProjectController extends Controller
             ['student_id', '=', $studentId],
             ['project_union_id', '=', $projectUnionId],
         ])->delete();
-        return redirect()->route('unionProject.create', $studentId);
+        //return redirect()->route('unionProject.index', $studentId, $unionId);
     }
 }

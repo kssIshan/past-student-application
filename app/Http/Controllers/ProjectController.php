@@ -48,18 +48,18 @@ class ProjectController extends Controller
     public function store(ProjectSaveRequest $request)
     {
         //dd($request);
-        $request->validated();
+        $valicdtedData = $request->validated();
         //$studentId = $student->id;
-        $unionId = $request->union_id;
-        $studentId = $request->student_id;
+        $unionId = $valicdtedData['union_id'];;
+        $studentId = $valicdtedData['student_id'];
         //dd($unionId);
         $project = Project::create([
-            'name' => $request->input('name'),
-            'status' => $request->input('status'),
-            'duration' => $request->input('duration'),
-            'description' => $request->input('description'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
+            'name' => $valicdtedData['name'],
+            'status' => $valicdtedData['status'],
+            'duration' => $valicdtedData['duration'],
+            'description' => $valicdtedData['description'],
+            'start_date' => $valicdtedData['start_date'],
+            'end_date' => $valicdtedData['end_date'],
         ]);
         //laravel looking for project_union table there fore i 
         //Cannot use attach() 

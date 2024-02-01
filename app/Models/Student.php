@@ -16,6 +16,7 @@ class Student extends Model
         'reg_no',
         'uuid',
         'user_id',
+        'nic',
         'first_name',
         'last_name',
         'dob',
@@ -24,6 +25,7 @@ class Student extends Model
         'address',
         'email',
         'mobile_no',
+        'mobile_no2',
         'land_no',
     ];
     public function user(): BelongsTo
