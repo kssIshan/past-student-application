@@ -56,22 +56,27 @@ class StudentController extends Controller
     //Add student to the database
     public function store(StudentSaveRequest $request)
     {
-        $request->validated();
+
+        $validatedRequest = $request->validated();
+        //dd($validatedRequest);
         $uuid = Str::uuid();
         $id = Auth::id();
         Student::create([
             'uuid' => $uuid,
             'user_id' => $id,
-            'reg_no' => $request->input('reg_no'),
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'dob' => $request->input('dob'),
-            'date_of_admission' => $request->input('date_of_admission'),
-            'date_of_leave' => $request->input('date_of_leave'),
-            'address' => $request->input('address'),
-            'email' => $request->input('email'),
-            'mobile_no' => $request->input('mobile_no'),
-            'land_no' => $request->input('land_no'),
+            'reg_no' => $validatedRequest['reg_no'],
+            'nic' => $validatedRequest['nic'],
+            'first_name' => $validatedRequest['first_name'],
+            'last_name' => $validatedRequest['last_name'],
+            'dob' => $validatedRequest['dob'],
+            'date_of_admission' => $validatedRequest['date_of_admission'],
+            'date_of_leave' => $validatedRequest['date_of_leave'],
+            'address' => $validatedRequest['address'],
+            'email' => $validatedRequest['email'],
+            'mobile_no' => $validatedRequest['mobile_no'],
+            'mobile_no2' => $validatedRequest['mobile_no2'],
+            'first_name' => $validatedRequest['first_name'],
+            'land_no' => $validatedRequest['land_no'],
 
         ]);
         return redirect()->route('dashboard');
@@ -84,34 +89,40 @@ class StudentController extends Controller
     }
     public function update(int $studentId, StudentUpdateRequest $request)
     {
-        $request->validated();
+        $validatedRequest = $request->validated();
         $student = Student::findOrFail($studentId);
+        //$reg_no = $student->reg_no;
         $uuid = Str::uuid();
         $id = Auth::id();
+        $reg_no = $validatedRequest['reg_no'];
 
         $student->update([
             'uuid' => $uuid,
             'user_id' => $id,
-            'reg_no' => $request->input('reg_no'),
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'dob' => $request->input('dob'),
-            'date_of_admission' => $request->input('date_of_admission'),
-            'date_of_leave' => $request->input('date_of_leave'),
-            'address' => $request->input('address'),
-            'email' => $request->input('email'),
-            'mobile_no' => $request->input('mobile_no'),
-            'land_no' => $request->input('land_no'),
+            'reg_no' => $validatedRequest['reg_no'],
+            'nic' => $validatedRequest['nic'],
+            'first_name' => $validatedRequest['first_name'],
+            'last_name' => $validatedRequest['last_name'],
+            'dob' => $validatedRequest['dob'],
+            'date_of_admission' => $validatedRequest['date_of_admission'],
+            'date_of_leave' => $validatedRequest['date_of_leave'],
+            'address' => $validatedRequest['address'],
+            'email' => $validatedRequest['email'],
+            'mobile_no' => $validatedRequest['mobile_no'],
+            'mobile_no2' => $validatedRequest['mobile_no2'],
+            'first_name' => $validatedRequest['first_name'],
+            'land_no' => $validatedRequest['land_no'],
 
         ]);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('student.show', $reg_no);
     }
 
     public function destroy(int $studentId)
     {
         $student = Student::findOrFail($studentId);
         $student->delete();
-        return redirect()->route('dashboard');
+        $reg_no = $student->reg_no;
+        return redirect()->route('student.show', $reg_no);
     }
 }

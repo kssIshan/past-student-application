@@ -22,13 +22,13 @@ class ProjectSaveRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'union_id' => 'required|number',
-            'student_id' => 'required|number',
+            'union_id' => 'required|numeric',
+            'student_id' => 'required|numeric',
             'name' => 'required|string',
             'status' => 'sometimes|string',
-            'duration' => 'required|string',
+            'duration' => 'sometimes|string',
             'description' => 'nullable|string',
-            'start_date' => 'required|date',
+            'start_date' => 'nullable|date',
             'end_date' => 'nullable|date'
         ];
     }
