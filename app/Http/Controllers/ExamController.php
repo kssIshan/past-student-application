@@ -67,20 +67,20 @@ class ExamController extends Controller
     public function store(ExamSaveRequest $request, int $studentId)
     {
         $student = Student::findOrFail($studentId);
-        $request->validated();
-
+        $validatedData = $request->validated();
+        //dd($validatedData);
         $exam = Exam::create([
             'student_id' => $studentId,
-            'index_no' => $request->input('index_no'),
-            'type' => $request->input('type'),
-            'exam_year' => $request->input('exam_year'),
-            'attempt' => $request->input('attempt'),
-            'island_rank' => $request->input('island_rank'),
-            'district_rank' => $request->input('district_rank'),
-            'z_score' => $request->input('z_score'),
-            'cut_of_marks' => $request->input('cut_of_marks'),
-            'subject_stream' => $request->input('subject_stream'),
-            'is_pass' => $request->input('is_pass'),
+            'index_no' => $validatedData['index_no'],
+            'type' => $validatedData['type'],
+            'exam_year' => $validatedData['exam_year'],
+            'attempt' => $validatedData['attempt'],
+            'island_rank' => $validatedData['island_rank'],
+            'district_rank' => $validatedData['district_rank'],
+            'z_score' => $validatedData['z_score'],
+            'cut_of_marks' => $validatedData['cut_of_marks'],
+            'subject_stream' => $validatedData['subject_stream'],
+            'is_pass' => $validatedData['is_pass'],
         ]);
         //this is a nother method to save array
         /* $resultData = collect($request['results'])->map(function ($result) {
@@ -93,7 +93,8 @@ class ExamController extends Controller
         // Create Result records
         $exam->results()->createMany($resultData);*/
 
-        $resultarray = $request->results;
+        //$resultarray = $request->results;
+        $resultarray = $validatedData['results'];
         //dd($resultarray);
 
         foreach ($resultarray as  $result) {

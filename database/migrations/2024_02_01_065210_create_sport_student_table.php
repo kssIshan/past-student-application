@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('unions', function (Blueprint $table) {
+        Schema::create('sport_student', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->date('start_date');
-            $table->string('status');
+            $table->foreignId('student_id')->constrained('students')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('sport_id')->constrained('sports')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('period');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('unions');
+        Schema::dropIfExists('sport_student');
     }
 };

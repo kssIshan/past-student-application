@@ -25,7 +25,8 @@ const props = defineProps({
             :active="route().current('union.index', { studentId: props.student.id })">
             Student Union
         </NavLink>
-        <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+        <NavLink :href="route('sport.index', { studentId: props.student.id })"
+            :active="route().current('sport.index', { studentId: props.student.id })">
             Sport & Achievements
         </NavLink>
         <NavLink :href="route('exam.index', { student: props.student.id })"

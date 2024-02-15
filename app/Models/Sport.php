@@ -4,26 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Union extends Model
+class Sport extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-        'name',
-        'start_date',
-        'status',
+        'sport_name'
+
     ];
-    //union_project
-    public function projects()
-    {
-        return $this->belongsToMany(Project::class);
-    }
-    //student_union
+    //sport_student
     public function students()
     {
         return $this->belongsToMany(Student::class)
-            ->withPivot('position', 'duration', 'join_date', 'leave_date')
+            ->withPivot('period')
             ->withTimestamps();
+    }
+    public function achievements(): HasMany
+    {
+
+        return $this->hasMany(Achievement::class);
     }
 }

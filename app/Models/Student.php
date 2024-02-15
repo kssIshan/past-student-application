@@ -37,6 +37,18 @@ class Student extends Model
 
         return $this->hasMany(Exam::class);
     }
+    //sport_student
+    // public function sports()
+    // {
+    //     return $this->belongsToMany(Sport::class);
+    // }
+    public function sports()
+    {
+        return $this->belongsToMany(Sport::class, 'sport_student')
+            ->withPivot('period')
+            ->withTimestamps(); // Include the pivot table column for period
+    }
+
     //student_union
     public function unions()
     {
@@ -45,6 +57,11 @@ class Student extends Model
             ->withTimestamps();
     }
 
+    public function achievements(): HasMany
+    {
+
+        return $this->hasMany(Achievement::class);
+    }
     // public function projects()
     // {
     //     return $this->belongsToMany(Project::class, 'student_union_project')

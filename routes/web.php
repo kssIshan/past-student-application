@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SportController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UnionController;
 use App\Http\Controllers\UnionProjectController;
@@ -40,11 +42,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Route::get('/pages/basicInformation', [PageController::class, 'index'])->name('basicInformation.index');
-    // Route::get('/pages/studentUnion', [PageController::class, 'index'])->name('studentUnion.index');
-    // Route::get('/pages/sportAndAchievment', [PageController::class, 'index'])->name('sportAndAchievment.index');
-    // Route::get('/pages/education', [PageController::class, 'index'])->name('education.index');
-    // Route::get('/pages/activity', [PageController::class, 'index'])->name('activity.index');
 
 
     Route::get('/student/{regNo}/show', [StudentController::class, 'show'])->name('student.show');
@@ -93,6 +90,20 @@ Route::middleware('auth')->group(function () {
     //Route::post('student/{studentId}/unionProject/{unionId}/store', [UnionProjectController::class, 'attachProject'])->name('unionProject.attachProject');
     Route::delete('student/{studentId}/union/{unionId}/project/{projectId}', [UnionProjectController::class, 'destroy'])->name('unionProject.destroy');
     Route::put('student/{studentId}/unionProject/{unionId}', [UnionProjectController::class, 'update'])->name('unionProject.update');
+
+    Route::get('student/{studentId}/sport/index', [SportController::class, 'index'])->name('sport.index');
+    Route::get('student/{studentId}/sport/create', [SportController::class, 'create'])->name('sport.create');
+    Route::delete('student/{studentId}/sport/{sportId}', [SportController::class, 'destroy'])->name('sport.destroy');
+    Route::put('student/{studentId}/sport/{sportId}/update', [SportController::class, 'update'])->name('sport.update');
+    Route::get('student/{studentId}/sport/{sportId}/edit', [SportController::class, 'edit'])->name('sport.edit');
+
+
+    Route::get('student/{studentId}/achievement/create', [AchievementController::class, 'create'])->name('achievement.create');
+    Route::post('student/{studentId}/achievement/store', [AchievementController::class, 'store'])->name('achievement.store');
+    Route::delete('student/{studentId}/achievement/{achievementId}', [AchievementController::class, 'destroy'])->name('achievement.destroy');
+    Route::get('student/{studentId}/achievement/{achievementId}/edit', [AchievementController::class, 'edit'])->name('achievement.edit');
+    Route::put('student/{studentId}/achievement/{achievementId}/update', [AchievementController::class, 'update'])->name('achievement.update');
+    Route::post('student/{studentId}/sport/attach', [SportController::class, 'attachSport'])->name('sport.attach');
 });
 
 require __DIR__ . '/auth.php';

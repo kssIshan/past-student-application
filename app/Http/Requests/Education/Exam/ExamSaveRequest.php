@@ -38,7 +38,7 @@ class ExamSaveRequest extends FormRequest
             'subject_stream' => 'nullable|string|max:255',
             'is_pass' => 'nullable|boolean',
 
-            //'results' => 'present|array',
+            'results' => 'present|array',
             'result.*.subject_id' => 'nullable|integer',
             //'result.*.grade' => 'nullable|string',
             'result.*.grade' => 'required_with:result.*.subject_id,!=,null',
