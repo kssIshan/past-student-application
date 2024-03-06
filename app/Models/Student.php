@@ -16,6 +16,7 @@ class Student extends Model
         'reg_no',
         'uuid',
         'user_id',
+        'nic',
         'first_name',
         'last_name',
         'dob',
@@ -24,6 +25,7 @@ class Student extends Model
         'address',
         'email',
         'mobile_no',
+        'mobile_no2',
         'land_no',
     ];
     public function user(): BelongsTo
@@ -35,6 +37,18 @@ class Student extends Model
 
         return $this->hasMany(Exam::class);
     }
+    //sport_student
+    // public function sports()
+    // {
+    //     return $this->belongsToMany(Sport::class);
+    // }
+    public function sports()
+    {
+        return $this->belongsToMany(Sport::class, 'sport_student')
+            ->withPivot('period')
+            ->withTimestamps(); // Include the pivot table column for period
+    }
+
     //student_union
     public function unions()
     {
@@ -43,6 +57,11 @@ class Student extends Model
             ->withTimestamps();
     }
 
+    public function achievements(): HasMany
+    {
+
+        return $this->hasMany(Achievement::class);
+    }
     // public function projects()
     // {
     //     return $this->belongsToMany(Project::class, 'student_union_project')

@@ -23,7 +23,12 @@ class ProjectAttachRequest extends FormRequest
     {
         return [
             'union_id' => 'required|numeric',
-            'project_id' => 'required|numeric'
+            //'project_id' => 'required|numeric',
+
+            'unionProjects' => 'present|array',
+            'unionProject.*.project_id' => 'required|numeric',
+
+
         ];
     }
 }

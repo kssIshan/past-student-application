@@ -22,7 +22,10 @@ class StudentUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reg_no' => 'required|unique:students,reg_no',
+            'reg_no' => 'required|numeric',
+            //'reg_no' => 'required|unique:students,reg_no',
+            'nic' => 'required|string|max:255',
+            //'full_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'dob' => 'required|date',
@@ -31,6 +34,7 @@ class StudentUpdateRequest extends FormRequest
             'address' => 'nullable|string|max:255',
             'email' => 'nullable|email',
             'mobile_no' => 'nullable|numeric',
+            'mobile_no2' => 'nullable|numeric',
             'land_no' => 'nullable|numeric',
         ];
     }

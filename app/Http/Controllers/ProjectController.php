@@ -48,18 +48,18 @@ class ProjectController extends Controller
     public function store(ProjectSaveRequest $request)
     {
         //dd($request);
-        $request->validated();
+        $valicdtedData = $request->validated();
         //$studentId = $student->id;
-        $unionId = $request->union_id;
-        $studentId = $request->student_id;
+        $unionId = $valicdtedData['union_id'];;
+        $studentId = $valicdtedData['student_id'];
         //dd($unionId);
         $project = Project::create([
-            'name' => $request->input('name'),
-            'status' => $request->input('status'),
-            'duration' => $request->input('duration'),
-            'description' => $request->input('description'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
+            'name' => $valicdtedData['name'],
+            'status' => $valicdtedData['status'],
+            'duration' => $valicdtedData['duration'],
+            'description' => $valicdtedData['description'],
+            'start_date' => $valicdtedData['start_date'],
+            'end_date' => $valicdtedData['end_date'],
         ]);
         //laravel looking for project_union table there fore i 
         //Cannot use attach() 
@@ -69,7 +69,7 @@ class ProjectController extends Controller
         //return response()->json('success');
     }
 
-    public function attachProject(ProjectAttachRequest $request, int $studentId, int $unionId)
+    /*public function attachProject(ProjectAttachRequest $request, int $studentId, int $unionId)
     {
         //dd($request);
         $validatedRequest = $request->validated();
@@ -80,33 +80,61 @@ class ProjectController extends Controller
         $unions = $student->unions;
         //dd($unions);
         foreach ($unions as $union) {
-            if ($union['id'] == $unionId) {
-                //$projectIds = DB::select('select projec_id from project_union where priject_id=?', [$projectId]);
-                $projectUnionIdRow = DB::selectOne('select id from project_union where project_id=?', [$projectId]);
+            // if ($union['id'] == $unionId) {
+            //$projectIds = DB::select('select projec_id from project_union where priject_id=?', [$projectId]);
+            $projectUnionIdRow = DB::selectOne('select id from project_union where project_id=?', [$projectId]);
 
-                $projectUnionId = $projectUnionIdRow->id;
-                $checkProjectUnionIdRow = DB::selectOne('select id from student_union_project where student_id=? and project_union_id=?', [$studentId, $projectUnionId]);
-                //dd($checkProjectUnionIdRow);
-                //$checkProjectUnionId = $checkProjectUnionIdRow->id;
-                //prevent duplicate by checking availability of database student_union_project
-                if ($checkProjectUnionIdRow === null) {
-                    //dd($projectUnionId);
-                    if ($projectUnionId != null) {
-                        DB::insert('insert into student_union_project (student_id, project_union_id)
+            $projectUnionId = $projectUnionIdRow->id;
+            $checkProjectUnionIdRow = DB::selectOne('select id from student_union_project where student_id=? and project_union_id=?', [$studentId, $projectUnionId]);
+            //dd($checkProjectUnionIdRow);
+            //$checkProjectUnionId = $checkProjectUnionIdRow->id;
+            //prevent duplicate by checking availability of database student_union_project
+            if ($checkProjectUnionIdRow === null) {
+                //dd($projectUnionId);
+                if ($projectUnionId != null) {
+                    DB::insert('insert into student_union_project (student_id, project_union_id)
                      values (?, ?)', [$studentId, $projectUnionId]);
-                    } else {
-                        //if the project do not belogs to considered union
-                    }
                 } else {
-                    ///avoid duplicate
+                    //if the project do not belogs to considered union
                 }
             } else {
-                //// union{['id']  is not eqaul to unionId
+                ///avoid duplicate
+            }
+            } else {
+                // union{['id']  is not eqaul to unionId
             }
         }
-        //return response()->json('success');
+        return response()->json('success');
         //return redirect()->route('dashboard');
         //with('status', 'Project attached successfully')->status(303)
+    }*/
+
+    public function attachProject(ProjectAttachRequest $request, int $studentId, int $unionId)
+    {
+        $validatedRequest = $request->validated();
+        $projectIdArray = $validatedRequest['unionProjects'];
+        //dd($projectIdArray);
+        foreach ($projectIdArray as $projectId) {
+            $projectId = $projectId['project_id'];
+            $getProjectUnionId = DB::selectOne('select id from project_union
+             where project_id=? and union_id=? ', [$projectId, $unionId]);
+            //dd($getProjectUnionId);
+
+            $checkProjectUnionId = DB::selectOne('select id from student_union_project where 
+            student_id=? and project_union_id=?', [$studentId, $getProjectUnionId->id]);
+            //dd($checkProjectUnionId);
+
+            if ($checkProjectUnionId === null) {
+                DB::insert('insert into student_union_project (student_id, project_union_id)
+                values (?, ?)', [$studentId, $getProjectUnionId->id]);
+            } else {
+                return "Already attach to student";
+            }
+        }
+        return redirect()->route('unionProject.index', [$studentId, $unionId])->with('success', 'Projects attached successfully!');
+
+        //return redirect()->route('unionProject.index', [$studentId, $unionId]);
+        //return response()->json(['projects' => "save success"]);
     }
     /**
      * Display the specified resource.

@@ -1,88 +1,641 @@
 <script setup>
+import PopUp from '@/Components/PopUp.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import { ref } from 'vue'
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { reactive } from 'vue';
+import axios from 'axios';
+
+const searchOpen = ref(false);
+const basicInformation = ref(false);
+const studentUnion = ref(false);
+const education = ref(false);
+const sportAndAchievement = ref(false);
+const searchBasicInfo = ref("searchBasicInfo")
+const searchStudentUnion = ref("searchStudentUnion")
+const searchStudent = ref("searchStudent")
+const searchSportId = ref("searchSportAndAchievement")
+const searchEducationId = ref("searchEducation")
+
+
+
+
+
+const setIsOpen = async (popUpId) => {
+    if (popUpId === 'searchPopUp') {
+        searchOpen.value = !searchOpen.value
+        console.log(searchOpen);
+    }
+    if (popUpId === 'searchbasicInformationPopUp') {
+        basicInformation.value = !basicInformation.value
+        console.log(basicInformation);
+    }
+    if (popUpId === 'searchstudentUnionPopUp') {
+        studentUnion.value = !studentUnion.value
+        console.log(studentUnion);
+    }
+    if (popUpId === 'searchsportAndAchievementPopUp') {
+        sportAndAchievement.value = !sportAndAchievement.value
+        console.log(sportAndAchievement);
+    }
+    if (popUpId === 'searcheducationPopUp') {
+        education.value = !education.value
+        console.log(education);
+    }
+    // else if (popUpId === 'updatePopUp') {
+    //     updateOpen.value = !updateOpen.value
+    //     console.log(updateOpen);
+    // }
+
+}
+
+let reg_no = ref("")
+let nic = ref("")
+let studentList = reactive([])
+const firstName = ref(null)
+const lastName = ref(null)
+let commentsLoading = ref(false)
+const getStudents = async (firstName, lastName) => {
+    try {
+        commentsLoading.value = true
+        const response = await axios.get(route('student.showbyName', { firstName: firstName, lastName: lastName }))
+        console.log(response);
+        studentList = response.data.students
+        console.log(studentList);
+        studentList.forEach(student => {
+            console.log(student.first_name);
+        });
+
+        commentsLoading.value = false
+    } catch (error) {
+        console.log(error, "1");
+    }
+
+    //console.log(props.post.id, response, postCommentList);
+}
+
+
 </script>
 
 <template>
+
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Home</h2>
-        </template>
-
-        <div>Home</div>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
 
-                <div class="flex items-center justify-between bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mb-4">
-                    <div class="bg-blue-200 p-4  mr-4 w-64 h-24">
-                        <Link :href="route('student.searchStudent')" method="get" as="button">
-                        Search Student
-                        </Link>
-                    </div>
-                    <div class="bg-green-200 p-4  mr-4 w-60 h-24">
-                        <Link :href="route('student.viewAddStudentForm')" method="get" as="button">
-                        Add New Student
-                        </Link>
-                    </div>
-                    <div class="bg-yellow-200 p-4  mr-4 w-64 h-24">
-                        Basic Information
-                    </div>
+        <!-- <div class="mx-auto"> -->
+        <div class="h-auto">
+            <div class="sm:ml-2 sm:mr-2 ml-2 mr-2 mb-2 mt-2">
+                <div class="mt-6 mb-6 ml-2">
+                    <h1 class="text-rc-eastern-blue text-3xl">Home</h1>
                 </div>
 
-
-                <div class="flex flex-wrap bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
-
-                    <!-- Column 1 -->
-
-                    <div class="flex flex-wrap bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
-
-                        <!-- Cell 1 -->
-                        <div class="w-full sm:w-1/2 lg:w-1/2 p-6">
+                <div class="shadow md:shadow-lg grid grid-flow-row-dense grid-cols-8 grid-rows-3 ">
+                    <div
+                        class="sm:h-[90%] sm:pt-10 col-span-3 sm:col-span-3 mb-2 sm:pr-14 pt-10  bg-rc-purple-heart sm:my-2 sm:mx-2">
+                        <div class="flex  sm:h-20 pl-12">
                             <div>
-                                Students Unions
+                                <svg class="h-[40%] pl-2 w-15 sm:h-20 sm:w-20" width="100" height="100"
+                                    viewBox="0 0 113 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_68_33)">
+                                        <g clip-path="url(#clip1_68_33)">
+                                            <path
+                                                d="M49.4374 9.4165C43.0556 9.41705 36.7666 10.9437 31.0949 13.8691C25.4232 16.7946 20.5333 21.0339 16.8333 26.2335C13.1332 31.4331 10.7302 37.4421 9.82477 43.7593C8.91935 50.0764 9.53775 56.5185 11.6284 62.5481C13.719 68.5776 17.2213 74.0198 21.8429 78.4205C26.4646 82.8213 32.0716 86.053 38.1963 87.846C44.3209 89.6391 50.7855 89.9415 57.0508 88.728C63.3161 87.5145 69.2003 84.8203 74.2126 80.8702L91.4074 98.065C92.2954 98.9227 93.4848 99.3972 94.7193 99.3865C95.9538 99.3758 97.1347 98.8806 98.0077 98.0077C98.8806 97.1347 99.3758 95.9538 99.3865 94.7193C99.3972 93.4848 98.9227 92.2954 98.065 91.4074L80.8702 74.2126C85.522 68.3113 88.4184 61.2195 89.228 53.7489C90.0375 46.2783 88.7274 38.7307 85.4477 31.9699C82.168 25.209 77.0512 19.5081 70.6828 15.5196C64.3144 11.531 56.9517 9.416 49.4374 9.4165ZM18.8332 49.4373C18.8332 41.3206 22.0575 33.5363 27.7969 27.7969C33.5363 22.0575 41.3206 18.8332 49.4374 18.8332C57.5541 18.8332 65.3384 22.0575 71.0778 27.7969C76.8172 33.5363 80.0415 41.3206 80.0415 49.4373C80.0415 57.5541 76.8172 65.3384 71.0778 71.0778C65.3384 76.8172 57.5541 80.0415 49.4374 80.0415C41.3206 80.0415 33.5363 76.8172 27.7969 71.0778C22.0575 65.3384 18.8332 57.5541 18.8332 49.4373Z"
+                                                fill="white" />
+                                            <path
+                                                d="M49.4374 9.4165C43.0556 9.41705 36.7666 10.9437 31.0949 13.8691C25.4232 16.7946 20.5333 21.0339 16.8333 26.2335C13.1332 31.4331 10.7302 37.4421 9.82477 43.7593C8.91935 50.0764 9.53775 56.5185 11.6284 62.5481C13.719 68.5776 17.2213 74.0198 21.8429 78.4205C26.4646 82.8213 32.0716 86.053 38.1963 87.846C44.3209 89.6391 50.7855 89.9415 57.0508 88.728C63.3161 87.5145 69.2003 84.8203 74.2126 80.8702L91.4074 98.065C92.2954 98.9227 93.4848 99.3972 94.7193 99.3865C95.9538 99.3758 97.1347 98.8806 98.0077 98.0077C98.8806 97.1347 99.3758 95.9538 99.3865 94.7193C99.3972 93.4848 98.9227 92.2954 98.065 91.4074L80.8702 74.2126C85.522 68.3113 88.4184 61.2195 89.228 53.7489C90.0375 46.2783 88.7274 38.7307 85.4477 31.9699C82.168 25.209 77.0512 19.5081 70.6828 15.5196C64.3144 11.531 56.9517 9.416 49.4374 9.4165ZM18.8332 49.4373C18.8332 41.3206 22.0575 33.5363 27.7969 27.7969C33.5363 22.0575 41.3206 18.8332 49.4374 18.8332C57.5541 18.8332 65.3384 22.0575 71.0778 27.7969C76.8172 33.5363 80.0415 41.3206 80.0415 49.4373C80.0415 57.5541 76.8172 65.3384 71.0778 71.0778C65.3384 76.8172 57.5541 80.0415 49.4374 80.0415C41.3206 80.0415 33.5363 76.8172 27.7969 71.0778C22.0575 65.3384 18.8332 57.5541 18.8332 49.4373Z"
+                                                stroke="white" />
+                                        </g>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_68_33">
+                                            <rect width="113" height="113" fill="white" />
+                                        </clipPath>
+                                        <clipPath id="clip1_68_33">
+                                            <rect width="113" height="113" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <div @click="searchOpen = true" class=" visible sm:invisible  pt-2 text-center">
+                                    <p class="flex text-xs  font-bold text-rc-white pr-4">
+                                        Search
+                                        Students
+                                    </p>
+                                </div>
+                            </div>
+                            <PopUp :open="searchOpen">
+                                <div class="bg-blue-100 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                    <div class=" sm:items-start">
+
+                                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                            <DialogTitle as="h3"
+                                                class="text-base font-semibold leading-6 text-rc-eastern-blue">
+                                                Search Student
+                                            </DialogTitle>
+                                            <div class="mt-2">
+                                                <div class="sm:col-span-3">
+                                                    <div class="lg:flex  lg:mt-10 ">
+                                                        <div class="lg:flex-1 ">
+                                                            <label
+                                                                class="block text-sm font-medium leading-6 text-gray-900"
+                                                                for="id">Student ID</label>
+                                                        </div>
+                                                        <div class="lg:flex-1 lg:pt-1 sm:flex-1 sm:pt-1">
+                                                            <input
+                                                                class="block w-[100%]  rounded-md border-0 py-1.5 text-gray-900 ring-1  ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                                type="numeric" id="id" v-model="reg_no" />
+
+                                                        </div>
+                                                        <div class="lg:flex-1 lg:pt-1 mx-4 ">
+                                                            <Link
+                                                                class="float-right text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non"
+                                                                :href="route('student.search1', { regNo: reg_no, searchId: searchStudent })"
+                                                                method="get" as="button">Search
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                    <div class="lg:flex  lg:mt-10 ">
+                                                        <div class="lg:flex-1">
+                                                            <label
+                                                                class="block text-sm font-medium leading-6 text-gray-900"
+                                                                for="id">Student NIC</label>
+                                                        </div>
+                                                        <div class="lg:flex-1">
+                                                            <input
+                                                                class="block w-[100%]  rounded-md border-0 py-1.5 text-gray-900 ring-1  ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                                type="numeric" id="id" v-model="nic" />
+
+                                                        </div>
+                                                        <div class="lg:flex-1 mx-4 ">
+                                                            <Link
+                                                                class="float-right text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non"
+                                                                :href="route('student.search2', { nic: nic })"
+                                                                method="get" as="button">Search
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class=" lg:mt-10 ">
+
+                                                            <div class="lg:flex">
+                                                                <div class="lg:flex-1">
+                                                                    <label
+                                                                        class="block text-sm font-medium leading-6 text-gray-900"
+                                                                        for="">First Name</label>
+                                                                    <input
+                                                                        class="block w-[85%]  rounded-md border-0 py-1.5 text-gray-900 ring-1  ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                                        type="text" id="lastName" v-model="firstName" />
+                                                                </div>
+                                                                <div class="lg:flex-1">
+                                                                    <label
+                                                                        class="block text-sm font-medium leading-6 text-gray-900"
+                                                                        for="">Last name</label>
+                                                                    <input
+                                                                        class="block w-[85%]  rounded-md border-0 py-1.5 text-gray-900 ring-1  ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                                        type="text" id="firstName" v-model="lastName" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="  lg:mt-10 ">
+                                                                <button type="button"
+                                                                    class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded"
+                                                                    @click="getStudents(firstName, lastName)">Search</button>
+                                                                <!-- {{ studentList }} -->
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="  lg:mt-10 ">
+                                                            <div class="lg:flex">
+                                                                <h1
+                                                                    class="text-base font-semibold leading-6 text-gray-900">
+                                                                    Student Information</h1>
+                                                            </div>
+                                                            <div class="  lg:mt-10 lg:mb-10 ">
+                                                                <div class="lg:flex" v-if="studentList.length"
+                                                                    v-for="student in studentList" :key="student.id">
+                                                                    <!-- <div v-for="student in studentList" :key="student.id"> -->
+                                                                    <div class="lg:flex-1">
+                                                                        <h2>{{ student.first_name }} {{
+                                    student.last_name }}
+                                                                        </h2>
+                                                                        <p>Registration Number: {{ student.reg_no }}</p>
+                                                                        <p>Email: {{ student.email }}</p>
+                                                                        <p>Date of Birth: {{ student.dob }}</p>
+                                                                    </div>
+                                                                    <div class="lg:flex-1 lg:mt-10">
+                                                                        <Link
+                                                                            class="float-right text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non"
+                                                                            :href="route('student.search1', { regNo: student.reg_no, searchId: searchStudent })"
+                                                                            method="get" as="button">Go
+                                                                        </Link>
+                                                                    </div>
+                                                                </div>
+                                                                <div v-if="studentList.length == 0">
+                                                                    No students found.
+                                                                </div>
+                                                                <p v-if="commentsLoading">Loading </p>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-blue-100 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                    <!-- <button type="button"
+                                        class="float-right text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non"
+                                        @click="UpdateSportAndClose('updatePopUp', sportDetail.id)">Update</button> -->
+                                    <button type="button"
+                                        class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10  border-2 border-rc-java py-1 rounded"
+                                        @click="setIsOpen('searchPopUp')" ref="cancelButtonRef">Cancel</button>
+                                </div>
+                            </PopUp>
+                            <div @click="searchOpen = true">
+                                <div class="invisible sm:visible  sm:pt-5">
+                                    <span>
+                                        <button
+                                            class="flex place-items-center justify-center sm:text-base lg:text-xl   font-bold text-center text-rc-white"
+                                            type="button">Search Student</button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                    <div class=" mb-2   col-span-2 sm:col-span-2 bg-rc-atlantis sm:my-2 sm:mx-2 ml-2">
+                        <div class="sm:flex place-items-center sm:justify-center">
+                            <div class="flex justify-center   pt-5 h-32">
+                                <div class=" place-items-center sm:justify-center pl-2  sm:pt-0 sm:pl-0">
+                                    <div class=" sm:flex sm:place-items-center sm:justify-center">
+                                        <svg class="h-[45%] w-12 sm:h-20 sm:w-20" width="100" height="100"
+                                            viewBox="0 0 113 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M56.5 7.0625C43.4373 7.2201 30.9541 12.4793 21.7167 21.7167C12.4793 30.9541 7.2201 43.4373 7.0625 56.5C7.2201 69.5627 12.4793 82.046 21.7167 91.2833C30.9541 100.521 43.4373 105.78 56.5 105.938C69.5627 105.78 82.046 100.521 91.2833 91.2833C100.521 82.046 105.78 69.5627 105.938 56.5C105.78 43.4373 100.521 30.9541 91.2833 21.7167C82.046 12.4793 69.5627 7.2201 56.5 7.0625ZM84.75 60.0312H60.0312V84.75H52.9688V60.0312H28.25V52.9688H52.9688V28.25H60.0312V52.9688H84.75V60.0312Z"
+                                                fill="white" />
+                                        </svg>
+                                    </div>
+                                    <div
+                                        class="flex place-items-center sm:justify-center pl-1 pr-2 text-center pt-5 sm:pt-0 sm:pr-0 sm:pl-0  ">
 
-                        <!-- Cell 2 -->
-                        <div class="w-full sm:w-1/2 lg:w-1/2 p-6">
-                            <div>
-                                Activities
+                                        <Link :href="route('student.viewAddStudentForm')" method="get" as="button"
+                                            class="flex  text-xs sm:text-base lg:text-xl font-bold text-rc-white ">
+                                        Add New Student
+                                        </Link>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Cell 3 -->
-                        <div class="w-full sm:w-1/2 lg:w-1/2 p-6">
+                    <template></template>
+                    <div
+                        class="sm:h-[90%] ml-2 sm:pt-10 col-span-3 sm:col-span-3 mb-2 sm:pr-14 pt-10  bg-rc-java sm:my-2 sm:mx-2">
+                        <div class="flex  sm:h-20 pl-12">
                             <div>
+                                <svg class="h-[40%] w-15 sm:h-20 sm:w-20 pl-2 " width="110" height="110"
+                                    viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M56.5 7.0625C46.7222 7.0625 37.164 9.96196 29.034 15.3942C20.9041 20.8265 14.5675 28.5476 10.8257 37.5811C7.08392 46.6146 6.10489 56.5548 8.01245 66.1448C9.92001 75.7347 14.6285 84.5436 21.5424 91.4576C28.4564 98.3715 37.2653 103.08 46.8552 104.988C56.4452 106.895 66.3854 105.916 75.4189 102.174C84.4525 98.4325 92.1735 92.096 97.6058 83.966C103.038 75.836 105.938 66.2778 105.938 56.5C105.938 43.3884 100.729 30.8137 91.4576 21.5424C82.1863 12.2711 69.6117 7.0625 56.5 7.0625ZM56.5 28.25C57.5476 28.25 58.5717 28.5607 59.4428 29.1427C60.3139 29.7247 60.9928 30.552 61.3937 31.5198C61.7946 32.4877 61.8995 33.5528 61.6951 34.5802C61.4907 35.6077 60.9863 36.5515 60.2455 37.2923C59.5047 38.0331 58.5609 38.5376 57.5334 38.742C56.5059 38.9464 55.4409 38.8415 54.473 38.4405C53.5051 38.0396 52.6779 37.3607 52.0958 36.4897C51.5138 35.6186 51.2031 34.5945 51.2031 33.5469C51.2031 32.1421 51.7612 30.7948 52.7546 29.8014C53.7479 28.8081 55.0952 28.25 56.5 28.25ZM70.625 85.1914H42.375V77.2461H52.5274V56.9414H45.9063V48.9961H60.4727V77.2461H70.625V85.1914Z"
+                                        fill="white" />
+                                </svg>
+                                <PopUp :open="basicInformation">
+                                    <div class="bg-blue-100 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                        <div class=" sm:items-start">
+
+                                            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                                <DialogTitle as="h3"
+                                                    class="text-base font-semibold leading-6 text-rc-eastern-blue">
+                                                    Search Student Basic Information
+                                                </DialogTitle>
+                                                <div class="mt-2">
+                                                    <div class="sm:col-span-3">
+                                                        <div class="lg:flex  lg:mt-10 ">
+                                                            <div class="lg:flex-1 ">
+                                                                <label
+                                                                    class="block text-sm font-medium leading-6 text-gray-900"
+                                                                    for="id">Student ID</label>
+                                                            </div>
+                                                            <div class="lg:flex-1 lg:pt-1 sm:flex-1 sm:pt-1">
+                                                                <input
+                                                                    class="block w-[100%]  rounded-md border-0 py-1.5 text-gray-900 ring-1  ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                                    type="numeric" id="id" v-model="reg_no" />
+
+                                                            </div>
+                                                            <div class="lg:flex-1 lg:pt-1 mx-4 ">
+
+                                                                <Link
+                                                                    class="float-right text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non"
+                                                                    :href="route('student.search1', { regNo: reg_no, searchId: searchBasicInfo })"
+                                                                    method="get" as="button">Search
+                                                                </Link>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-blue-100 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                        <button type="button"
+                                            class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10  border-2 border-rc-java py-1 rounded"
+                                            @click="setIsOpen('searchbasicInformationPopUp')"
+                                            ref="cancelButtonRef">Cancel</button>
+                                    </div>
+                                </PopUp>
+
+                                <div @click="basicInformation = true"
+                                    class="visible sm:invisible  pl-2 pt-2 text-center">
+                                    <p class=" flex text-xs font-bold text-rc-white ">Basic
+                                        Information</p>
+                                </div>
+                            </div>
+                            <div @click="basicInformation = true" class="invisible  sm:visible sm:pt-6 ">
+                                <p
+                                    class="flex place-items-center justify-center sm:text-base lg:text-xl font-bold text-center text-rc-white">
+                                    Basic
+                                    Information</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <template></template>
+                    <div
+                        class="col-span-5  sm:col-span-3 bg-rc-selective-yellow sm:pt-10  sm:my-2 mb-2 sm:pr-14 pt-10 sm:mx-2 sm:h-[90%]  z-10 ">
+                        <div class="flex  sm:h-20 pl-12">
+                            <div>
+                                <svg class="h-[50%] w-15 sm:h-20 sm:w-20" width="100" height="100" viewBox="0 0 155 129"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_1_7)">
+                                        <path
+                                            d="M46.7 64.5C61.5947 64.5 73.65 51.8771 73.65 36.2812C73.65 20.6854 61.5947 8.0625 46.7 8.0625C31.8053 8.0625 19.75 20.6854 19.75 36.2812C19.75 51.8771 31.8053 64.5 46.7 64.5ZM65.18 72.5625H63.1828C58.1778 75.082 52.6194 76.5938 46.7 76.5938C40.7806 76.5938 35.2463 75.082 30.2172 72.5625H28.22C12.9162 72.5625 0.5 85.5633 0.5 101.588V108.844C0.5 115.521 5.67344 120.938 12.05 120.938H81.35C87.7266 120.938 92.9 115.521 92.9 108.844V101.588C92.9 85.5633 80.4837 72.5625 65.18 72.5625ZM116 64.5C128.753 64.5 139.1 53.666 139.1 40.3125C139.1 26.959 128.753 16.125 116 16.125C103.247 16.125 92.9 26.959 92.9 40.3125C92.9 53.666 103.247 64.5 116 64.5ZM127.55 72.5625H126.636C123.291 73.7719 119.754 74.5781 116 74.5781C112.246 74.5781 108.709 73.7719 105.364 72.5625H104.45C99.5412 72.5625 95.0175 74.049 91.0472 76.4426C96.9184 83.0689 100.6 91.8621 100.6 101.588V111.263C100.6 111.817 100.48 112.346 100.456 112.875H142.95C149.327 112.875 154.5 107.458 154.5 100.781C154.5 85.1853 142.445 72.5625 127.55 72.5625Z"
+                                            fill="white" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_1_7">
+                                            <rect width="154" height="129" fill="white" transform="translate(0.5)" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <PopUp :open="studentUnion">
+                                    <div class="bg-blue-100 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                        <div class=" sm:items-start">
+
+                                            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                                <DialogTitle as="h3"
+                                                    class="text-base font-semibold leading-6 text-rc-eastern-blue">
+                                                    Search Student Union Details
+                                                </DialogTitle>
+                                                <div class="mt-2">
+                                                    <div class="sm:col-span-3">
+                                                        <div class="lg:flex  lg:mt-10 ">
+                                                            <div class="lg:flex-1 ">
+                                                                <label
+                                                                    class="block text-sm font-medium leading-6 text-gray-900"
+                                                                    for="id">Student ID</label>
+                                                            </div>
+                                                            <div class="lg:flex-1 lg:pt-1 sm:flex-1 sm:pt-1">
+                                                                <input
+                                                                    class="block w-[100%]  rounded-md border-0 py-1.5 text-gray-900 ring-1  ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                                    type="numeric" id="id" v-model="reg_no" />
+
+                                                            </div>
+                                                            <div class="lg:flex-1 lg:pt-1 mx-4 ">
+                                                                <Link
+                                                                    class="float-right text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non"
+                                                                    :href="route('union.searchUnion', { regNo: reg_no, searchUnionId: searchStudentUnion })"
+                                                                    method="get" as="button">Search
+                                                                </Link>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-blue-100 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                        <button type="button"
+                                            class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10  border-2 border-rc-java py-1 rounded"
+                                            @click="setIsOpen('searchstudentUnionPopUp')"
+                                            ref="cancelButtonRef">Cancel</button>
+                                    </div>
+                                </PopUp>
+                                <div @click="studentUnion = true" class="visible sm:invisible px-2  pt-2 text-center">
+                                    <p class="flex text-xs font-bold text-rc-white pr-4">
+                                        Student
+                                        Union</p>
+                                </div>
+                            </div>
+                            <div @click="studentUnion = true" class="sm:pt-6  invisible sm:visible">
+                                <p
+                                    class="flex place-items-center justify-center sm:text-base lg:text-xl font-bold text-center text-rc-white">
+                                    Student
+                                    Union</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <template></template>
+                    <div
+                        class="flex col-span-3 row-span-2 sm:row-span-1 ml-2 items-center justify-center mb-2 sm:pt-8 sm:pl-3 bg-rc-royal-blue sm:my-2 sm:mx-2  sm:col-span-2">
+                        <div class="flex justify-center h-32 pt-10 sm:pt-0">
+                            <!-- <span class="inline-block align-middle pt-20 sm:pt-0"> -->
+                            <div>
+                                <svg class="h-[70%] w-15  sm:h-20 sm:w-30  sm:pr-0" width="100" height="100"
+                                    viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M45.5564 84.7503L72.1585 58.1483L65.3314 51.3212L45.4387 71.2139L35.5512 61.3264L28.8418 68.0358L45.5564 84.7503ZM22.2502 103.584C19.6606 103.584 17.443 102.661 15.5973 100.815C13.7516 98.9695 12.8304 96.7534 12.8335 94.167V18.8337C12.8335 16.2441 13.7563 14.0265 15.602 12.1808C17.4477 10.3351 19.6637 9.41386 22.2502 9.417H59.9168L88.1668 37.667V94.167C88.1668 96.7566 87.244 98.9742 85.3983 100.82C83.5527 102.666 81.3366 103.587 78.7502 103.584H22.2502ZM55.2085 42.3753H78.7502L55.2085 18.8337V42.3753Z"
+                                        fill="white" />
+                                </svg>
+                                <div class="visible sm:invisible text-center pl-10">
+                                    <p class="flex text-xs font-bold text-rc-white">Association</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="invisible sm:visible sm:pb-6">
+                            <p
+                                class=" flex place-items-center sm:justify-center sm:text-base lg:text-xl font-bold text-center text-rc-white">
+                                Association
+                            </p>
+                        </div>
+                        <!-- </span> -->
+                    </div>
+
+                    <template></template>
+                    <div
+                        class="flex sm:place-items-center sm:justify-center  mb-2  bg-rc-atlantis row-span-1 sm:row-span-2 col-span-5 sm:col-span-3 sm:my-2 sm:mx-2">
+                        <div class="flex place-items-center justify-center  pl-3 pt-5">
+                            <div>
+                                <div class="flex flex-row">
+                                    <svg class="h-[40%] w-15 sm:h-20 sm:w-20 sm:pr-0 pt-5" width="70" height="70"
+                                        viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M3.47173 78.95C3.16357 78.6418 2.777 77.8962 2.38624 76.6754C2.00429 75.4821 1.64115 73.9107 1.33728 72.0335C0.772678 68.5457 0.417496 64.032 0.516524 58.984L23.4422 81.9097C18.4131 82.0271 13.8991 81.6716 10.406 81.1017C8.52618 80.7951 6.9506 80.4277 5.75362 80.0422C4.5291 79.6478 3.78023 79.2585 3.47173 78.95ZM16.1685 16.177C24.3906 7.90996 35.4418 3.72406 45.9874 1.7882L80.5877 36.3885C78.6515 46.9311 74.4214 57.94 66.197 66.2093C57.9734 74.4778 46.9657 78.7079 36.3792 80.5991L1.77784 45.9978C3.714 35.4552 7.94415 24.4463 16.1685 16.177ZM35.1426 54.4029L54.3926 35.1529C56.3753 33.1702 56.3753 30.0119 54.3926 28.0292C52.4098 26.0464 49.2515 26.0464 47.2688 28.0292L28.0188 47.2792C26.036 49.2619 26.036 52.4202 28.0188 54.4029C30.0016 56.3857 33.1598 56.3857 35.1426 54.4029ZM78.9396 3.4821C79.2478 3.79027 79.6344 4.53584 80.0251 5.75668C80.4071 6.95003 80.7702 8.52135 81.0741 10.3986C81.6387 13.8864 81.9939 18.4001 81.8948 23.4481L58.9691 0.522378C63.9983 0.404984 68.5122 0.760478 72.0054 1.33036C73.8852 1.63703 75.4608 2.0044 76.6577 2.38989C77.8822 2.78425 78.6311 3.17361 78.9396 3.4821Z"
+                                            fill="white" stroke="#92DD32" />
+                                    </svg>
+                                    <svg class="h-[40%] w-20 sm:h-20 sm:w-32 sm:pr-0" width="100" height="100"
+                                        viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M29.6877 18.75C25.1293 18.75 20.7576 20.5608 17.5343 23.7841C14.311 27.0074 12.5002 31.3791 12.5002 35.9375V68.75C17.473 62.1196 24.8761 57.7362 33.0808 56.5641C41.2855 55.392 49.6198 57.5272 56.2502 62.5C62.8806 67.4728 67.264 74.8759 68.4361 83.0806C69.6082 91.2853 67.473 99.6196 62.5002 106.25V112.5H120.313C124.871 112.5 129.243 110.689 132.466 107.466C135.689 104.243 137.5 99.8709 137.5 95.3125V35.9375C137.5 31.3791 135.689 27.0074 132.466 23.7841C129.243 20.5608 124.871 18.75 120.313 18.75H29.6877ZM42.1877 43.75H107.813C109.056 43.75 110.248 44.2439 111.127 45.1229C112.006 46.002 112.5 47.1943 112.5 48.4375C112.5 49.6807 112.006 50.873 111.127 51.7521C110.248 52.6311 109.056 53.125 107.813 53.125H42.1877C40.9445 53.125 39.7522 52.6311 38.8731 51.7521C37.9941 50.873 37.5002 49.6807 37.5002 48.4375C37.5002 47.1943 37.9941 46.002 38.8731 45.1229C39.7522 44.2439 40.9445 43.75 42.1877 43.75ZM75.0002 79.6875C75.0002 78.4443 75.4941 77.252 76.3731 76.3729C77.2522 75.4939 78.4445 75 79.6877 75H107.813C109.056 75 110.248 75.4939 111.127 76.3729C112.006 77.252 112.5 78.4443 112.5 79.6875C112.5 80.9307 112.006 82.123 111.127 83.0021C110.248 83.8811 109.056 84.375 107.813 84.375H79.6877C78.4445 84.375 77.2522 83.8811 76.3731 83.0021C75.4941 82.123 75.0002 80.9307 75.0002 79.6875ZM37.5002 62.5C30.869 62.5 24.5093 65.1343 19.8203 69.8232C15.1313 74.5122 12.4971 80.8719 12.4971 87.5031C12.4971 94.1344 15.1313 100.494 19.8203 105.183C24.5093 109.872 30.869 112.506 37.5002 112.506C44.1314 112.506 50.4911 109.872 55.1801 105.183C59.8691 100.494 62.5033 94.1344 62.5033 87.5031C62.5033 80.8719 59.8691 74.5122 55.1801 69.8232C50.4911 65.1343 44.1314 62.5 37.5002 62.5ZM56.2502 112.506C51.0314 116.431 44.5377 118.756 37.5002 118.756C30.7384 118.77 24.1563 116.58 18.7502 112.519V132.806C18.7502 136.369 22.5314 138.556 25.5627 136.987L26.1252 136.644L37.5002 128.694L48.8752 136.644C49.5321 137.102 50.2956 137.385 51.0929 137.465C51.8901 137.544 52.6945 137.418 53.4292 137.099C54.1638 136.779 54.8043 136.276 55.2894 135.639C55.7745 135.001 56.0881 134.25 56.2002 133.456L56.2502 132.806L56.2564 112.5L56.2502 112.506Z"
+                                            fill="white" />
+                                    </svg>
+                                </div>
+                                <PopUp :open="sportAndAchievement">
+                                    <div class="bg-blue-100 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                        <div class=" sm:items-start">
+
+                                            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                                <DialogTitle as="h3"
+                                                    class="text-base font-semibold leading-6 text-rc-eastern-blue">
+                                                    Search Sport And Achievement
+                                                </DialogTitle>
+                                                <div class="mt-2">
+                                                    <div class="sm:col-span-3">
+                                                        <div class="lg:flex  lg:mt-10 ">
+                                                            <div class="lg:flex-1 ">
+                                                                <label
+                                                                    class="block text-sm font-medium leading-6 text-gray-900"
+                                                                    for="id">Student ID</label>
+                                                            </div>
+                                                            <div class="lg:flex-1 lg:pt-1 sm:flex-1 sm:pt-1">
+                                                                <input
+                                                                    class="block w-[100%]  rounded-md border-0 py-1.5 text-gray-900 ring-1  ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                                    type="numeric" id="id" v-model="reg_no" />
+
+                                                            </div>
+                                                            <div class="lg:flex-1 lg:pt-1 mx-4 ">
+                                                                <Link
+                                                                    class="float-right text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non"
+                                                                    :href="route('sport.index', { regNo: reg_no, searchSportId: searchSportId })"
+                                                                    method="get" as="button">Search
+                                                                </Link>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-blue-100 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                        <button type="button"
+                                            class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10  border-2 border-rc-java py-1 rounded"
+                                            @click="setIsOpen('searchsportAndAchievementPopUp')"
+                                            ref="cancelButtonRef">Cancel</button>
+                                    </div>
+                                </PopUp>
+                                <div @click="sportAndAchievement = true" class="invisible sm:visible">
+                                    <p
+                                        class="flex sm:pt-4 sm:place-items-center sm:justify-center text-xs sm:text-base lg:text-xl font-bold text-center text-rc-white">
+                                        Sports & Achievement</p>
+                                </div>
+                            </div>
+                            <div @click="sportAndAchievement = true" class="visible sm:hidden">
+                                <p
+                                    class="flex place-items-center sm:justify-center pt-20 text-xs sm:text-xl font-bold text-center text-rc-white">
+                                    Sports & Achievement</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <template></template>
+                    <div
+                        class="sm:h-[90%] sm:pt-10 col-span-3 sm:col-span-3 mb-2 sm:pr-14 pt-10  bg-rc-java sm:my-2 sm:mx-2">
+                        <div class="flex  sm:h-20 pl-12">
+                            <div>
+                                <svg class="h-[40%] pl-2 w-15 sm:h-20 sm:w-20" width="110" height="110"
+                                    viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M53.5531 40.8145C50.4288 40.8145 47.503 42.0267 45.2877 44.2419C43.083 46.4571 41.8604 49.3829 41.8604 52.5072C41.8604 55.6315 43.083 58.5573 45.2877 60.7726C47.503 62.9773 50.4288 64.1999 53.5531 64.1999C56.6774 64.1999 59.6032 62.9773 61.8184 60.7726C64.0232 58.5573 65.2458 55.6315 65.2458 52.5072C65.2458 49.3829 64.0232 46.4571 61.8184 44.2419C60.7364 43.1516 59.4486 42.2871 58.0297 41.6988C56.6108 41.1104 55.0891 40.8098 53.5531 40.8145ZM96.6352 65.4225L89.8014 59.5813C90.1253 57.596 90.2925 55.5688 90.2925 53.5521C90.2925 51.5354 90.1253 49.4978 89.8014 47.5229L96.6352 41.6818C97.1514 41.2399 97.5209 40.6513 97.6945 39.9943C97.8681 39.3372 97.8376 38.643 97.607 38.0037L97.5129 37.732C95.6322 32.4728 92.8142 27.5979 89.1954 23.3435L89.0073 23.124C88.5678 22.6073 87.9822 22.2359 87.3274 22.0587C86.6727 21.8815 85.9797 21.9068 85.3396 22.1313L76.8548 25.1512C73.7201 22.5807 70.23 20.5535 66.4474 19.1429L64.8069 10.2715C64.6831 9.60318 64.3589 8.98835 63.8774 8.50868C63.3959 8.02901 62.7798 7.70721 62.111 7.58604L61.8289 7.53379C56.3953 6.55156 50.6691 6.55156 45.2355 7.53379L44.9534 7.58604C44.2846 7.70721 43.6685 8.02901 43.187 8.50868C42.7054 8.98835 42.3812 9.60318 42.2575 10.2715L40.6065 19.1847C36.8597 20.6066 33.3693 22.6288 30.2722 25.1721L21.7248 22.1313C21.0849 21.905 20.3913 21.8788 19.7362 22.0561C19.0811 22.2334 18.4954 22.6059 18.0571 23.124L17.869 23.3435C14.2566 27.6025 11.4393 32.4762 9.55141 37.732L9.45737 38.0037C8.98716 39.3099 9.37378 40.7728 10.4291 41.6818L17.3465 47.5856C17.0226 49.5501 16.8659 51.5563 16.8659 53.5417C16.8659 55.548 17.0226 57.5542 17.3465 59.4978L10.45 65.4016C9.93381 65.8435 9.56433 66.4321 9.39075 67.0891C9.21716 67.7461 9.24769 68.4404 9.47827 69.0797L9.57231 69.3514C11.4636 74.6073 14.2536 79.4662 17.8899 83.7399L18.078 83.9594C18.5174 84.4761 19.1031 84.8475 19.7578 85.0247C20.4125 85.2019 21.1056 85.1766 21.7457 84.952L30.2931 81.9113C33.407 84.4714 36.8761 86.4985 40.6274 87.8987L42.2784 96.8119C42.4021 97.4802 42.7263 98.095 43.2079 98.5747C43.6894 99.0544 44.3055 99.3762 44.9743 99.4974L45.2564 99.5496C50.7434 100.537 56.3627 100.537 61.8498 99.5496L62.1319 99.4974C62.8007 99.3762 63.4168 99.0544 63.8983 98.5747C64.3798 98.095 64.704 97.4802 64.8278 96.8119L66.4683 87.9405C70.2509 86.5194 73.741 84.5027 76.8757 81.9322L85.3605 84.952C86.0004 85.1784 86.6939 85.2046 87.349 85.0273C88.0042 84.85 88.5898 84.4775 89.0282 83.9594L89.2163 83.7399C92.8526 79.4453 95.6425 74.6073 97.5338 69.3514L97.6279 69.0797C98.0772 67.784 97.6906 66.3315 96.6352 65.4225ZM53.5531 70.8769C43.4069 70.8769 35.1833 62.6534 35.1833 52.5072C35.1833 42.361 43.4069 34.1375 53.5531 34.1375C63.6993 34.1375 71.9228 42.361 71.9228 52.5072C71.9228 62.6534 63.6993 70.8769 53.5531 70.8769Z"
+                                        fill="white" />
+                                </svg>
+                                <div class="visible sm:invisible px-3 pl-10 pt-2 text-center">
+                                    <Link
+                                        class="flex place-items-center justify-center sm:text-base lg:text-xl font-bold text-center text-rc-white"
+                                        :href="route('setting.index')" method="get" as="button">Setting
+                                    </Link>
+                                </div>
+                            </div>
+                            <div class="invisible sm:visible sm:pt-5">
+
+                                <Link
+                                    class="flex place-items-center justify-center sm:text-base lg:text-xl font-bold text-center text-rc-white"
+                                    :href="route('setting.index')" method="get" as="button">Setting
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <template></template>
+                    <div
+                        class="flex col-span-5 ml-2 mb-2 sm:justify-center sm:pt-8 sm:pl-3 bg-green-600 sm:my-2 sm:mx-2  sm:col-span-2 ">
+                        <div class="flex justify-center h-32 pt-10 sm:pt-0">
+                            <div>
+                                <svg class="h-[60%] w-15 sm:h-20 sm:w-30 pt-3" width="98" height="98"
+                                    viewBox="0 0 98 98" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M21.6715 4.03899L63.0415 4.01799V20.139L21.6715 20.16C19.803 20.1621 17.9828 19.566 16.4775 18.459L9.77155 13.51C9.55153 13.3473 9.37273 13.1352 9.24953 12.8908C9.12633 12.6465 9.06215 12.3766 9.06215 12.103C9.06215 11.8293 9.12633 11.5595 9.24953 11.3151C9.37273 11.0708 9.55153 10.8587 9.77155 10.696L16.4845 5.73999C17.9851 4.63329 19.8 4.03487 21.6645 4.03199L21.6715 4.03899ZM80.0725 20.125L71.7915 20.132V4.01099H80.1005C84.5385 4.08099 87.9335 8.02199 87.9335 12.061C87.9335 16.107 84.5385 20.055 80.1005 20.125H80.0725ZM38.5555 36.295C40.9005 37.233 42.8955 38.262 44.6245 39.284V98C41.9571 95.9954 39.039 94.3481 35.9445 93.1C30.7995 91.042 23.3795 89.341 12.0605 89.341C11.1323 89.341 10.2421 88.9722 9.58567 88.3159C8.9293 87.6595 8.56055 86.7692 8.56055 85.841V35.525C8.56055 34.5967 8.9293 33.7065 9.58567 33.0501C10.2421 32.3937 11.1323 32.025 12.0605 32.025C24.1005 32.025 32.4305 33.838 38.5555 36.295ZM62.0476 93.1C58.2676 94.619 55.6145 96.362 53.3675 97.993V39.284C55.0965 38.262 57.0985 37.233 59.4435 36.295C65.5685 33.838 73.8986 32.025 85.9386 32.025C86.8668 32.025 87.757 32.3937 88.4134 33.0501C89.0698 33.7065 89.4386 34.5967 89.4386 35.525V85.841C89.4386 86.7692 89.0698 87.6595 88.4134 88.3159C87.757 88.9722 86.8668 89.341 85.9386 89.341C74.6196 89.341 67.1996 91.035 62.0476 93.1Z"
+                                        fill="white" />
+                                </svg>
+
+                            </div>
+                            <PopUp :open="education">
+                                <div class="bg-blue-100 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                    <div class=" sm:items-start">
+
+                                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                            <DialogTitle as="h3"
+                                                class="text-base font-semibold leading-6 text-rc-eastern-blue">
+                                                Search Student Education Details
+                                            </DialogTitle>
+                                            <div class="mt-2">
+                                                <div class="sm:col-span-3">
+                                                    <div class="lg:flex  lg:mt-10 ">
+                                                        <div class="lg:flex-1 ">
+                                                            <label
+                                                                class="block text-sm font-medium leading-6 text-gray-900"
+                                                                for="id">Student ID</label>
+                                                        </div>
+                                                        <div class="lg:flex-1 lg:pt-1 sm:flex-1 sm:pt-1">
+                                                            <input
+                                                                class="block w-[100%]  rounded-md border-0 py-1.5 text-gray-900 ring-1  ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                                type="numeric" id="id" v-model="reg_no" />
+
+                                                        </div>
+                                                        <div class="lg:flex-1 lg:pt-1 mx-4 ">
+                                                            <Link
+                                                                class="float-right text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non"
+                                                                :href="route('exam.index1', { regNo: reg_no, searchEducationId: searchEducationId })"
+                                                                method="get" as="button">
+                                                            Search
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-blue-100 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                    <button type="button"
+                                        class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10  border-2 border-rc-java py-1 rounded"
+                                        @click="setIsOpen('searcheducationPopUp')" ref="cancelButtonRef">Cancel</button>
+                                </div>
+                            </PopUp>
+                            <p @click="education = true"
+                                class="flex place-items-center pb-5 sm:justify-center text-xs sm:text-base lg:text-xl font-bold text-center text-rc-white">
                                 Education
-                            </div>
-                        </div>
-
-                        <!-- Cell 4 -->
-                        <div class="w-full sm:w-1/2 lg:w-1/2 p-6">
-                            <div>
-                                Setting
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                    <!-- Column 2 -->
-                    <div class="w-full sm:w-1/2 lg:w-1/3 p-6">
-                        <div>
-                            Sports and Achievements
+                            </p>
                         </div>
                     </div>
-
                 </div>
-
             </div>
-        </div>
 
+        </div>
+        <!-- </div> -->
 
     </AuthenticatedLayout>
 </template>

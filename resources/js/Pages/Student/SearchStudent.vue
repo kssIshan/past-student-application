@@ -40,38 +40,40 @@ const getStudents = async (firstName, lastName) => {
 </script>
 <template>
     <AuthenticatedLayout>
-        <div>search</div>
-
-        <input type="numeric" id="id" v-model="id" />
-        {{ id }}
-        <label for="id">Student ID</label>
         <div>
-            <Link :href="route('student.show', { regNo: id })" method="get" as="button">Search Student by Reg no
-            </Link>
+            <div>search</div>
 
-            <!-- <Link :href="`http://localhost:8000/student/1/show`" method="get" as="button">Search Student
-            </Link> -->
-        </div>
-        <div>
-            <input type="text" id="firstName" v-model="firstName" />
-            <input type="text" id="lastName" v-model="lastName" />
-            <button type="button" @click="getStudents(firstName, lastName)">Search by first and last name</button>
-            <!-- {{ studentList }} -->
-            <h1>Student Information</h1>
-            <div v-if="studentList.length" v-for="student in studentList" :key="student.id">
-                <!-- <div v-for="student in studentList" :key="student.id"> -->
-                <h2>{{ student.first_name }} {{ student.last_name }}</h2>
-                <p>Registration Number: {{ student.reg_no }}</p>
-                <p>Email: {{ student.email }}</p>
-                <p>Date of Birth: {{ student.dob }}</p>
-                <Link :href="route('student.show', { regNo: student.reg_no })" method="get" as="button">Search
+            <input type="numeric" id="id" v-model="id" />
+            {{ id }}
+            <label for="id">Student ID</label>
+            <div>
+                <Link :href="route('student.show', { regNo: id })" method="get" as="button">Search Student by Reg no
                 </Link>
-            </div>
 
-            <div v-else>
-                No students found.
+                <!-- <Link :href="`http://localhost:8000/student/1/show`" method="get" as="button">Search Student
+            </Link> -->
             </div>
-            <p v-if="commentsLoading">Loading </p>
+            <div>
+                <input type="text" id="firstName" v-model="firstName" />
+                <input type="text" id="lastName" v-model="lastName" />
+                <button type="button" @click="getStudents(firstName, lastName)">Search by first and last name</button>
+                <!-- {{ studentList }} -->
+                <h1>Student Information</h1>
+                <div v-if="studentList.length" v-for="student in studentList" :key="student.id">
+                    <!-- <div v-for="student in studentList" :key="student.id"> -->
+                    <h2>{{ student.first_name }} {{ student.last_name }}</h2>
+                    <p>Registration Number: {{ student.reg_no }}</p>
+                    <p>Email: {{ student.email }}</p>
+                    <p>Date of Birth: {{ student.dob }}</p>
+                    <Link :href="route('student.show', { regNo: student.reg_no })" method="get" as="button">Search
+                    </Link>
+                </div>
+
+                <div v-else>
+                    No students found.
+                </div>
+                <p v-if="commentsLoading">Loading </p>
+            </div>
         </div>
         <!-- {{ student }} -->
     </AuthenticatedLayout>

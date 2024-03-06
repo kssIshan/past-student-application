@@ -15,12 +15,40 @@ class UnionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(int $studentId)
+    // public function index1(int $studentId)
+    // {
+    //     $student = Student::with('unions')->findOrFail($studentId);
+    //     // dd($student);
+    //     //$unions = $student->unions()->get();
+    //     // $unions = $student->unions;*/
+    //     $unions = $student->unions()->paginate(1);
+    //     return Inertia::render("Union/UnionDetails", ['unions' => $unions,  'student' => $student]);
+    // }
+    public function searchUnion(int $regNo, String $searchUnionId)
+    {
+        $student = Student::with('unions')->where('reg_no', $regNo)->first();
+        //dd($student);
+
+        if ($student === null) {
+            return "no studnet union found";
+        } else {
+
+            if ($searchUnionId == "searchStudentUnion") {
+                return Inertia::render("Union/SearchUnionStudent", ['student' => $student]);
+            }
+            if ($searchUnionId = "searchStudent") {
+                //$unions = $student->unions()->paginate(1);
+                return Inertia::render("Union/UnionDetails", ['student' => $student]);
+            }
+        }
+    }
+    public function index2(int $studentId)
     {
         $student = Student::with('unions')->findOrFail($studentId);
-        $unions = $student->unions;
 
-        return Inertia::render("Union/UnionDetails", ['unions' => $unions, 'student' => $student]);
+        $unions = $student->unions()->paginate(1);
+
+        return response()->json(['unions' => $unions]);
     }
 
 
@@ -30,7 +58,7 @@ class UnionController extends Controller
      */
 
     //Add new project to a union of a particular student
-    public function create(int $studentId, int $unionId)
+    /* public function create(int $studentId, int $unionId)
 
     {
         //$projects = [];
@@ -39,7 +67,7 @@ class UnionController extends Controller
 
         return Inertia::render("Union/AddNewUnionProjectDetails", ['union' => $union, 'studentId' => $studentId]);
         //return Inertia::render("Union/AddNewUnionProjectDetails");
-    }
+    }*/
 
     /**
      * Store a newly created resource in storage.
@@ -91,16 +119,30 @@ class UnionController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * dettach union from student
      */
-    public function destroy(int $studentId, int $unionId)
+    public function destroy(int $studentId, int $unionId, String $position)
     {
+        //dd($unionId);
         // $studentUnion = DB::select('select * from student_union 
         // where student_id=? and union_id=?', [$studentId, $unionId]);
 
         $deleted = DB::table('student_union')->where([
             ['student_id', '=', $studentId],
             ['union_id', '=', $unionId],
+            ['position', '=', $position]
         ])->delete();
+
+        /* $student = Student::with(['unions' => function ($query) use ($studentId, $position) {
+             $query->where('student_id', $studentId)
+                 ->where('position', $position);
+         }])->findOrFail($studentId);
+
+        $student = Student::find($studentId);
+
+        if ($student) {
+            $student->unions()->detach($unionId);
+        }*/
         //return response()->json(['Deleted' => $deleted]);
     }
 }

@@ -21,17 +21,49 @@ class ExamController extends Controller
         $subjects = Subject::all();
         return Inertia::render("Education/AddEducation", ['student' => $student, 'subjects' => $subjects]);
     }
-    //show exam details of selected student
-    public function index(int $studentId)
+    //render the page
+    public function index1(int $regNo, String $searchEducationId)
+    //public function index1()
     {
 
-        $student = Student::with('exams')->findOrFail($studentId);
-        $exams = $student->exams;
+        //$student = Student::findOrFail($studentId);
+        $student = Student::where('reg_no', $regNo)->first();
 
-        return Inertia::render("Education/EducationDetails", ['exams' => $exams, 'student' => $student]);
+        if ($student === null) {
+            return "no studnet union found";
+        } else {
+
+
+            if ($searchEducationId == "searchEducation") {
+                return Inertia::render("Education/SearchEducationDetails", ['student' => $student]);
+            }
+            if ($searchEducationId = "searchStudent") {
+                return Inertia::render("Education/EducationDetails", ['student' => $student]);
+            }
+        }
+
+
+
+        //$exams = $student->exams()->paginate(1); // Paginate the exams, assuming 10 exams per page
+
+        //return Inertia::render("Education/EducationDetails");
+
+    }
+
+    //show exam details of selected student
+    public function index2(int $studentId)
+    {
+
+        //$student = Student::with('exams')->findOrFail($studentId);
+        $student = Student::findOrFail($studentId);
+
+        $exams = $student->exams()->paginate(1); // Paginate the exams, assuming 10 exams per page
+
+        return response()->json(['student' => $student, 'exams' => $exams]);
+        //return Inertia::render("Education/EducationDetails", ['exams' => $exams, 'student' => $student]);
     }
     //show exam details and result of a particular exam
-    public function showresult(int $studentId, int $examId)
+    public function showresult(int $studentId, int $examId, String $searchShowResultId)
     {
 
         $exam = Exam::with('results')->findOrFail($examId);
@@ -54,32 +86,38 @@ class ExamController extends Controller
         // Assuming $subjectIds is an array of subject_id values
 
         // Retrieve all records from the 'results' table where the 'id' matches any value in $subjectIds
-        $results = Subject::whereIn('id', $subjectIds)->get();
+        $subjects = Subject::whereIn('id', $subjectIds)->get();
         //$subjectName = $results->pluck('name')->toArray();
         // Dump the results for debugging
         //dd($subjectName);
         $student = Student::findOrFail($studentId);
 
-        return Inertia::render("Education/ShowResult", ['exam' => $exam, 'subjects' => $results,  'student' => $student]);
+
+        if ($searchShowResultId == "searchShowResult") {
+            return Inertia::render("Education/SearchShowResult", ['exam' => $exam, 'subjects' => $subjects,  'student' => $student]);
+        }
+        if ($searchShowResultId = "searchStudent") {
+            return Inertia::render("Education/ShowResult", ['exam' => $exam, 'subjects' => $subjects,  'student' => $student]);
+        }
     }
     //store exam details of selected student
     public function store(ExamSaveRequest $request, int $studentId)
     {
         $student = Student::findOrFail($studentId);
-        $request->validated();
-
+        $validatedData = $request->validated();
+        //dd($validatedData);
         $exam = Exam::create([
             'student_id' => $studentId,
-            'index_no' => $request->input('index_no'),
-            'type' => $request->input('type'),
-            'exam_year' => $request->input('exam_year'),
-            'attempt' => $request->input('attempt'),
-            'island_rank' => $request->input('island_rank'),
-            'district_rank' => $request->input('district_rank'),
-            'z_score' => $request->input('z_score'),
-            'cut_of_marks' => $request->input('cut_of_marks'),
-            'subject_stream' => $request->input('subject_stream'),
-            'is_pass' => $request->input('is_pass'),
+            'index_no' => $validatedData['index_no'],
+            'type' => $validatedData['type'],
+            'exam_year' => $validatedData['exam_year'],
+            'attempt' => $validatedData['attempt'],
+            'island_rank' => $validatedData['island_rank'],
+            'district_rank' => $validatedData['district_rank'],
+            'z_score' => $validatedData['z_score'],
+            'cut_of_marks' => $validatedData['cut_of_marks'],
+            'subject_stream' => $validatedData['subject_stream'],
+            'is_pass' => $validatedData['is_pass'],
         ]);
         //this is a nother method to save array
         /* $resultData = collect($request['results'])->map(function ($result) {
@@ -92,7 +130,8 @@ class ExamController extends Controller
         // Create Result records
         $exam->results()->createMany($resultData);*/
 
-        $resultarray = $request->results;
+        //$resultarray = $request->results;
+        $resultarray = $validatedData['results'];
         //dd($resultarray);
 
         foreach ($resultarray as  $result) {
@@ -129,7 +168,7 @@ class ExamController extends Controller
         //dd($validatedRequest);
         $exam = Exam::with('results')->findOrFail($examId);
         //$studentId = $exam->student_id;
-
+        //dd($exam->results);
         //dd($request);
         $exam->update([
             'student_id' => $studentId,
@@ -167,44 +206,47 @@ class ExamController extends Controller
 
             ]);
         }*/
+        $result = $exam->results;
+        if ($result !== null) {
+            // Get all subject IDs from the database for the current exam
+            $existingSubjectIds = Result::where('exam_id', $examId)->pluck('subject_id')->toArray();
 
-        // Get all subject IDs from the database for the current exam
-        $existingSubjectIds = Result::where('exam_id', $examId)->pluck('subject_id')->toArray();
+            // Get subject IDs from $validatedRequest
+            $updatedSubjectIds = collect($validatedRequest['results'])->pluck('subject_id')->toArray();
 
-        // Get subject IDs from $validatedRequest
-        $updatedSubjectIds = collect($validatedRequest['results'])->pluck('subject_id')->toArray();
+            // Identify subject IDs that exist in the database but not in $validatedRequest
+            $subjectIdsToDelete = array_diff($existingSubjectIds, $updatedSubjectIds);
 
-        // Identify subject IDs that exist in the database but not in $validatedRequest
-        $subjectIdsToDelete = array_diff($existingSubjectIds, $updatedSubjectIds);
+            // Delete results for subject IDs that are not present in $validatedRequest
+            Result::where('exam_id', $examId)
+                ->whereIn('subject_id', $subjectIdsToDelete)
+                ->delete();
+            foreach ($validatedRequest['results'] as  $resultData) {
+                // Access subject_id and grade from the nested array
+                $subjectId = $resultData['subject_id'];
+                $grade = $resultData['grade'];
 
-        // Delete results for subject IDs that are not present in $validatedRequest
-        Result::where('exam_id', $examId)
-            ->whereIn('subject_id', $subjectIdsToDelete)
-            ->delete();
-        foreach ($validatedRequest['results'] as $key => $resultData) {
-            // Access subject_id and grade from the nested array
-            $subjectId = $resultData['subject_id'];
-            $grade = $resultData['grade'];
+                // Check if a result with the same subject_id exists
+                $existingResult = Result::where('exam_id', $examId)
+                    ->where('subject_id', $subjectId)
+                    ->first();
 
-            // Check if a result with the same subject_id exists
-            $existingResult = Result::where('exam_id', $examId)
-                ->where('subject_id', $subjectId)
-                ->first();
-
-            if ($existingResult) {
-                // If the result exists, update it
-                $existingResult->update([
-                    'grade' => $grade,
-                ]);
-            } else {
-                // If the result does not exist, insert a new result
-                Result::create([
-                    'exam_id' => $examId,
-                    'subject_id' => $subjectId,
-                    'grade' => $grade,
-                ]);
+                if ($existingResult) {
+                    // If the result exists, update it
+                    $existingResult->update([
+                        'grade' => $grade,
+                    ]);
+                } else {
+                    // If the result does not exist, insert a new result
+                    Result::create([
+                        'exam_id' => $examId,
+                        'subject_id' => $subjectId,
+                        'grade' => $grade,
+                    ]);
+                }
             }
         }
+
 
 
 
@@ -214,6 +256,6 @@ class ExamController extends Controller
     {
         $exam = Exam::findOrFail($examId);
         $exam->delete();
-        return redirect()->route('exam.show', $studentId);
+        return redirect()->route('exam.showresult', [$studentId, $examId]);
     }
 }
