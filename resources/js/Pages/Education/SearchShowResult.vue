@@ -19,8 +19,8 @@ const props = defineProps({
 
 
 });
-const searchStudent = ref("searchStudent")
 
+const searchEducationId = ref("searchEducation");
 </script>
 
 <template>
@@ -30,41 +30,7 @@ const searchStudent = ref("searchStudent")
         <div class="relative invisible sm:visible sm:mt-4 ml-4">
 
 
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                    <li class="inline-flex items-center">
-                        <Link :href="route('dashboard')" :active="route().current('dashboard')"
-                            class="relative inline-flex items-center py-2 text-xs font-semibold text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                        Home
-                        </Link>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="m1 9 4-4-4-4" />
-                            </svg>
 
-                            <Link
-                                :href="route('exam.index1', { regNo: props.student.reg_no, searchEducationId: searchStudent })"
-                                class="relative inline-flex items-center py-2 text-xs font-medium text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-                            Education </Link>
-                        </div>
-                    </li>
-                    <li aria-current="page">
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="m1 9 4-4-4-4" />
-                            </svg>
-                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
-                                Exam Result</span>
-                        </div>
-                    </li>
-                </ol>
-            </nav>
         </div>
         <div class="ml-3 my-2 px-3  pb-3">
             <div class="visible sm:invisible w-screen">
@@ -167,7 +133,7 @@ const searchStudent = ref("searchStudent")
 
         <!-- <div>{{ exam.results }}</div>
     <div>{{ subjects }}</div> -->
-
+        <!-- {{ subjects }} -->
         <div class=" px-60 ">
             <div
                 class="flex items-center justify-center p-4 border-2 border-gray-900/10 rounded-lg  overflow-x-auto shadow-inner hover:shadow-lg">
@@ -208,5 +174,13 @@ const searchStudent = ref("searchStudent")
 
             </div>
         </div>
+
+        <div class="p-4 flex justify-end">
+            <Link :href="route('exam.index1', { regNo: props.student.reg_no, searchEducationId: searchEducationId })"
+                class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">
+            back
+            </Link>
+        </div>
+
     </AuthenticatedLayout>
 </template>

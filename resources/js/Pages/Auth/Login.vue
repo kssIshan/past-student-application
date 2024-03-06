@@ -72,7 +72,7 @@ const submit = () => {
 
             </div>
         </div>
-        <div class="mx-auto px-3 sm:w-[60%] sm:pl-20">
+        <div class="mx-auto px-3 sm:w-[40%] sm:pl-20">
             <div class=" sm:mt-1 lg:pl-1 sm:w-full sm:max-w-sm">
                 <form class=" pt-10 space-y-4" @submit.prevent="submit">
 

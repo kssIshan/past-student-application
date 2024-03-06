@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import SavePopUp from '@/Components/SavePopUp.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -15,7 +16,84 @@ const showProject = ref(false);
 //let unionId = ref("");
 //let error = reactive([]);
 let projects = reactive([]);
+const saveOpen = ref(false);
+const saveProjectOpen = ref(false);
 
+const saveTitile = ref('Add New Union');
+const saveProjectTitile = ref('Add New Project');
+
+const searchUnionId = ref("searchStudent");
+
+
+const setIsOpen = async (popUpId) => {
+    if (popUpId === 'savePopUp') {
+        saveOpen.value = !saveOpen.value
+        console.log(saveOpen);
+    }
+    else if (popUpId === 'saveProjectPopUp') {
+        saveProjectOpen.value = !saveProjectOpen.value
+        console.log(saveProjectOpen);
+    }
+
+}
+const saveAndClose = async (popUpId) => {
+    if (popUpId === 'savePopUp') {
+        saveOpen.value = !saveOpen.value
+        console.log(saveOpen);
+
+        try {
+            unionsLoading.value = true
+            //const response = await axios.post(route('sport.store', { studentId: props.student.id }), form1);
+            const response = await axios.post(route('union.store'), form1);
+
+            //const response = await axios.post(route('sport.attach', { studentId: props.student.id }), form1);
+            console.log(response, (route('union.store'), form1));
+            form1 = {};
+
+            unionsLoading.value = false
+
+            window.location.href = route('unionProject.create', { studentId: props.student.id });
+            window.location.reload();
+
+
+        } catch (e) {
+            console.log(e, "6");
+            //console.log(e.response.status, 'status');
+            // if (e.response.status === 422) {
+
+            //     console.log(e.response.data.errors, "putError msg");
+            // }
+        }
+    }
+    else if (popUpId === 'saveProjectPopUp') {
+        saveProjectOpen.value = !saveProjectOpen.value
+        console.log(saveProjectOpen);
+
+        try {
+            unionsLoading.value = true
+            //const response = await axios.post(route('sport.store', { studentId: props.student.id }), form1);
+            const response = await axios.post(route('project.store'), form2);
+
+            //const response = await axios.post(route('sport.attach', { studentId: props.student.id }), form1);
+            console.log(response, (route('project.store'), form2));
+            //form2 = {};
+
+            unionsLoading.value = false
+
+
+        } catch (e) {
+            console.log(e, "6");
+            //console.log(e.response.status, 'status');
+            // if (e.response.status === 422) {
+
+            //     console.log(e.response.data.errors, "putError msg");
+            // }
+        }
+    }
+
+
+
+}
 const toggleSaveUnion = async () => {
     showUnion.value = !showUnion.value;
 }
@@ -64,7 +142,7 @@ const form2 = useForm({
     end_date: ""
 
 })
-const postUnion = async () => {
+/*const postUnion = async () => {
 
     try {
         unionsLoading.value = true
@@ -83,7 +161,7 @@ const postUnion = async () => {
             console.log(e.response.data.errors, "putError msg");
         }
     }
-}
+}*/
 
 const postProject = async () => {
     //console.log(unionId, 'by postProject');
@@ -117,8 +195,6 @@ async function getProject(unionId) {
     } catch (e) {
         console.log(e, "project error");
     }
-
-
 }
 async function onUnionChange(unionId) {
     if (unionId) {
@@ -145,20 +221,20 @@ const addResult = () => {
 </script>
 
 <template>
+
     <Head title="Add Union" />
     <AuthenticatedLayout>
-        <div class="ml-8">
+        <div>
             <div class="relative invisible sm:visible sm:mt-4">
 
 
-                <nav class="flex" aria-label="Breadcrumb">
+                <nav class="flex sm:p-2" aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                         <li class="inline-flex items-center">
-                            <a href="#"
-                                class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:hover:text-white">
-
-                                Home
-                            </a>
+                            <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                                class="relative inline-flex items-center py-2 text-xs font-semibold text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                            Home
+                            </Link>
                         </li>
                         <li>
                             <div class="flex items-center">
@@ -167,8 +243,10 @@ const addResult = () => {
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                         stroke-width="2" d="m1 9 4-4-4-4" />
                                 </svg>
-                                <a href="#"
-                                    class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:hover:text-white">Education</a>
+                                <Link
+                                    :href="route('union.searchUnion', { regNo: props.student.reg_no, searchUnionId: searchUnionId })"
+                                    class="relative inline-flex items-center py-2 text-xs font-semibold text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                Union Details </Link>
                             </div>
                         </li>
                         <li aria-current="page">
@@ -196,16 +274,67 @@ const addResult = () => {
                 </a>
             </div>
             <div>
-                <h1 class="text-rc-eastern-blue text-lg sm:text-3xl pt-3 pb-3"> Add New Union </h1>
+                <h1 class="text-rc-eastern-blue text-lg sm:text-3xl pt-3 pb-3 pl-4"> Add New Union </h1>
             </div>
             <div>
                 <form @submit.prevent="form.post(route('unionProject.store', { student: student }))">
-                    <div class="shadow  pt-5 pl-4 pr-3 pb-10 mb-2 mt-2">
-                        <div class="lg:flex  lg:mt-10">
+                    <div class="border-2 border-gray-900/10 m-8 pl-3 shadow-lg pb-3">
+                        <div class="lg:flex  lg:mt-6">
                             <div class="lg:flex-1 lg:pt-1 sm:flex-1 sm:pt-1 p-2">
-                                <h2 class="pb-3"><b>Student Union Details</b></h2>
+                                <h2 class="p-4 text-base font-semibold leading-7 text-gray-900"><b>Student Union
+                                        Details</b>
+                                </h2>
                             </div>
-                            <div class="lg:flex-1  lg:pt-1 sm:flex-1 sm:pt-1 ">
+                            <div>
+                                <SavePopUp @pop-up-cancel="setIsOpen('savePopUp')"
+                                    @submit-and-close="saveAndClose('savePopUp')" :open="saveOpen" :title="saveTitile">
+                                    <div>
+                                        <div
+                                            class="sm:col-span-3 invisible sm:invisible lg:visible z-0 sm:z-0  lg:w-[100%] sm:w-[50%]">
+
+
+                                            <InputLabel for="name" value="Name" />
+                                            <input
+                                                class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                type="text" id="name" v-model="form1.name" />
+                                            <InputError class="mt-2" :message="form1.errors.name" />
+
+                                            <InputLabel for="start_date" value="start Date" />
+                                            <input
+                                                class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                type="date" id="start_date" v-model="form1.start_date" />
+                                            <InputError class="mt-2" :message="form1.errors.start_date" />
+
+                                            <InputLabel for="status" value="Status" />
+                                            <input
+                                                class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                type="text" id="status" v-model="form1.status" />
+                                            <InputError class="mt-2" :message="form1.errors.status" />
+                                            <div
+                                                class="mt-6 sm:mt-12 lg:mt-12 flex items-center gap-x-6 justify-end lg:mr-16 mr-5 sm:mr-20">
+                                                <!-- <button
+                                                    class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white   hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                    type="button" @click="postUnion()">Send</button> -->
+                                                <p v-if="projectLoading">Loading </p>
+                                            </div>
+                                            <!-- <button
+                                        class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        type="button" @click="postUnion()">Send</button> -->
+                                        </div>
+
+                                    </div>
+                                </SavePopUp>
+                            </div>
+                            <div>
+                                <div class="p-10" @click="saveOpen = true">
+                                    <span>
+                                        <button
+                                            class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded"
+                                            type="button">Add New Union</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- <div class="lg:flex-1  lg:pt-1 sm:flex-1 sm:pt-1 ">
                                 <div class="lg:flex" v-if="showUnion">
                                     <div class="lg:flex-1">
                                         <div
@@ -239,9 +368,7 @@ const addResult = () => {
                                                     type="button" @click="postUnion()">Send</button>
                                                 <p v-if="projectLoading">Loading </p>
                                             </div>
-                                            <!-- <button
-                                        class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                        type="button" @click="postUnion()">Send</button> -->
+                                          
                                         </div>
 
                                     </div>
@@ -251,18 +378,19 @@ const addResult = () => {
                                     <span v-if="showUnion"><button
                                             class=" text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded"
                                             type="button">Done Save</button></span>
-                                    <!-- <span v-if="!showText">Show text</span> -->
+                                 
                                     <span v-else> <button
                                             class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded"
                                             type="button">Add Union</button></span>
 
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="lg:flex  lg:mt-10 ">
                             <div class="lg:flex-1">
                                 <div class="sm:col-span-3">
-                                    <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">Union
+                                    <label for="first-name"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Union
                                         Name*
                                     </label>
                                     <div class="mt-2">
@@ -287,7 +415,7 @@ const addResult = () => {
                                                     <div>
 
                                                         <label for="datepicker"
-                                                            class="block text-sm font-medium leading-6 text-gray-900">Join
+                                                            class="pb-4 block text-sm font-medium leading-6 text-gray-900">Join
                                                             Date</label>
                                                         <div class="relative">
 
@@ -363,7 +491,7 @@ const addResult = () => {
                                                 <div>
 
                                                     <label for="datepicker"
-                                                        class="block text-sm font-medium leading-6 text-gray-900">Leave
+                                                        class="pb-4 block text-sm font-medium leading-6 text-gray-900">Leave
                                                         Date</label>
                                                     <div class="relative">
                                                         <!-- <input type="hidden" name="date" x-ref="date"> -->
@@ -385,10 +513,12 @@ const addResult = () => {
 
                                 <div
                                     class="sm:col-span-3 invisible sm:invisible lg:visible z-0 sm:z-0  lg:w-[50%] sm:w-[50%]">
-                                    <label class="block text-sm font-medium leading-6 text-gray-900">Position</label>
+                                    <label
+                                        class="block pt-4 text-sm font-medium leading-6 text-gray-900">Position</label>
                                     <div class="mt-2">
-                                        <input type="text" v-model="form.position" id="first-name" autocomplete="given-name"
-                                            class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6">
+                                        <input type="text" v-model="form.position" id="first-name"
+                                            autocomplete="given-name"
+                                            class="block w-[85%] lg:w-[88%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6">
                                     </div>
                                 </div>
                             </div>
@@ -407,10 +537,10 @@ const addResult = () => {
                     </div>
 
 
-                    <div class="shadow pt-5 pl-4 pr-3 pb-10 mb-2 mt-2">
+                    <div class="border-2 border-gray-900/10 m-8 pl-3 shadow-lg pb-3">
                         <div class="lg:flex">
                             <div class="lg:flex-1">
-                                <h2 class="pb-3"><b> Union Project Details</b></h2>
+                                <h2 class="p-4"><b> Union Project Details</b></h2>
                             </div>
 
                             <div class="lg:flex-1 ">
@@ -478,17 +608,94 @@ const addResult = () => {
 
                                     </div>
                                 </div>
-
-                                <div class="p-10 " @click="toggleSaveProject()">
+                                <!-- <div class="p-10 " @click="toggleSaveProject()">
                                     <span v-if="showProject"><button
                                             class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded"
                                             type="button">Done Save</button></span>
-                                    <!-- <span v-if="!showText">Show text</span> -->
+                                    
                                     <span v-else> <button
                                             class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded"
                                             type="button">Add Project</button></span>
 
+                                </div> -->
+                                <div>
+                                    <div class="lg:flex">
+                                        <div class="lg:flex-1">
+                                            <SavePopUp @pop-up-cancel="setIsOpen('saveProjectPopUp')"
+                                                @submit-and-close="saveAndClose('saveProjectPopUp')"
+                                                :open="saveProjectOpen" :title="saveProjectTitile">
+                                                <div
+                                                    class=" invisible sm:invisible lg:visible z-0 sm:z-0  lg:w-[100%] sm:w-[50%]">
+                                                    <label>Select union</label>
+
+                                                    <select
+                                                        class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                        v-model="form2.union_id">
+                                                        <!-- <div>{{ form.union_id }}</div> -->
+                                                        <option v-for=" union in unions" :value="union.id">
+                                                            {{ union.name }}
+                                                        </option>
+                                                    </select>
+                                                    <InputLabel for="name" value="Name" />
+                                                    <input
+                                                        class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                        type="text" id="name" v-model="form2.name" />
+                                                    <InputError class="mt-2" :message="form2.errors.name" />
+
+                                                    <InputLabel for="status" value="Status" />
+                                                    <input
+                                                        class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                        type="text" id="status" v-model="form2.status" />
+                                                    <InputError class="mt-2" :message="form2.errors.status" />
+
+                                                    <InputLabel for="duration" value="Duration" />
+                                                    <input
+                                                        class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                        type="text" id="duration" v-model="form2.duration" />
+                                                    <InputError class="mt-2" :message="form2.errors.duration" />
+
+                                                    <InputLabel for="description" value="Description" />
+                                                    <input
+                                                        class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                        type="text" id="description" v-model="form2.description" />
+                                                    <InputError class="mt-2" :message="form2.errors.description" />
+
+                                                    <InputLabel for="start_date" value="Start date" />
+                                                    <input
+                                                        class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                        type="date" id="start_date" v-model="form2.start_date" />
+                                                    <InputError class="mt-2" :message="form2.errors.start_date" />
+
+                                                    <InputLabel for="end_date" value="End date" />
+                                                    <input
+                                                        class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
+                                                        type="date" id="end_date" v-model="form2.end_date" />
+                                                    <InputError class="mt-2" :message="form2.errors.end_date" />
+                                                    <div
+                                                        class="mt-6 sm:mt-12 lg:mt-12 flex items-center gap-x-6 justify-end lg:mr-16 mr-5 sm:mr-20">
+                                                        <!-- <button
+                                                            class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white   hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                            type="button" @click="postProject()">Send</button> -->
+                                                        <p v-if="projectLoading">Loading </p>
+                                                    </div>
+
+                                                </div>
+                                            </SavePopUp>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div>
+                                    <div class="p-10" @click="saveProjectOpen = true">
+                                        <span>
+                                            <button
+                                                class="text-sm float-right font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded"
+                                                type="button">Add New Project</button>
+                                        </span>
+                                    </div>
+                                </div>
+
+
+
                             </div>
                         </div>
 
@@ -709,12 +916,17 @@ const addResult = () => {
                                 placeholder="">
                         </div>
                     </div> -->
-                        <div class="mt-6 sm:mt-12 lg:mt-12 flex items-center gap-x-6 justify-end lg:mr-16 mr-5 sm:mr-20">
-                            <button type="button"
-                                class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded">Cancel</button>
-                            <button type="submit"
-                                class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">Submit</button>
-                        </div>
+
+                    </div>
+                    <div class="p-6 sm:mt-12 lg:mt-12 flex items-center gap-x-6 justify-end lg:mr-16 mr-5 sm:mr-20">
+                        <button type="button"
+                            class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded">
+                            <Link
+                                :href="route('union.searchUnion', { regNo: props.student.reg_no, searchUnionId: searchUnionId })">
+                            Cancel
+                            </Link>
+                        </button> <button type="submit"
+                            class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">Submit</button>
                     </div>
                 </form>
 

@@ -8,7 +8,8 @@ import { TailwindPagination } from 'laravel-vue-pagination';
 import { ref } from 'vue';
 
 const laravelUnion = ref({});
-const searchUnionProjectId = ref("searchStudent");
+const searchUnionProjectId = ref("searchUnionProject");
+
 
 const props = defineProps({
 
@@ -54,7 +55,7 @@ getResults();
 <template>
     <AuthenticatedLayout>
 
-        <NavForPages :student="student"></NavForPages>
+
         <!-- <UnionDetailsComponent :student="student" :search-union-project-id="searchUnionProjectId">
             <button type="button"
                 class="text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non">
@@ -67,19 +68,20 @@ getResults();
         <div class="p-10">
             <!-- {{ searchUnionProjectId }} -->
 
+
             <div class="grid grid-cols-2 gap-5 sm:mb-10 px-8">
                 <div class=" grid justify-center m-4">
                     <div
                         class="p-4 rounded-lg shadow-sm hover:shadow-lg invisible  absolute sm:flex sm:visible sm:pt-0 sm:ml-6">
                         <p class="  pl-4 font-medium text-md text-gray-500  font-large">{{ student.first_name }} {{
-            student.last_name
-        }}
+                            student.last_name
+                        }}
                             <br> {{
-                student.reg_no }}
+                                student.reg_no }}
                         </p>
                     </div>
                 </div>
-                <div class="grid justify-end sm:ml-0    mt-10">
+                <!-- <div class="grid justify-end sm:ml-0    mt-10">
                     <button type="button"
                         class="text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non">
                         <Link :href="route('unionProject.create', { studentId: props.student.id })" method="get"
@@ -88,7 +90,7 @@ getResults();
                         Union
                         </Link>
                     </button>
-                </div>
+                </div> -->
             </div>
             <!-- {{ unions }} -->
 
@@ -146,7 +148,7 @@ getResults();
                                     <p class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                         Project </p>
                                     </Link>
-                                    <Link class="p-4"
+                                    <!-- <Link class="p-4"
                                         :href="route('unionProject.edit', { studentId: student.id, unionId: union.id })"
                                         method="get" as="button">
                                     <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">
@@ -164,8 +166,8 @@ getResults();
                                             </defs>
                                         </svg>
                                     </a>
-                                    </Link>
-                                    <Link class="p-4"
+                                    </Link> -->
+                                    <!-- <Link class="p-4"
                                         :href="route('union.destroy', { studentId: student.id, unionId: union.id, position: union.pivot.position })"
                                         method="delete" as="button">
                                     <p class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">
@@ -176,7 +178,7 @@ getResults();
                                                 fill="#FF6868" />
                                         </svg>
                                     </p>
-                                    </Link>
+                                    </Link> -->
 
                                 </td>
 
@@ -193,6 +195,12 @@ getResults();
             </div>
 
 
+        </div>
+        <div class="p-4 flex justify-end">
+            <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">
+            back
+            </Link>
         </div>
     </AuthenticatedLayout>
 

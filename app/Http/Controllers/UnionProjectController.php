@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\Student;
 use App\Models\Union;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -20,7 +21,7 @@ class UnionProjectController extends Controller
     /**
      * Display a listing of the resource
      */
-    public function index(int $studentId, int $unionId)
+    public function  index(int $studentId, int $unionId, String $searchUnionProjectId)
     {
 
         $projects = [];
@@ -55,8 +56,76 @@ class UnionProjectController extends Controller
                         $projects[] = $project;
                     }
                 }
+                // Paginate the projects
+                /*$perPage = 10; // Number of projects per page
+                $projectCollection = collect($projects);
+                $paginatedProjects = new LengthAwarePaginator(
+                    $projectCollection->forPage(1, $perPage),
+                    $projectCollection->count(),
+                    $perPage
+                );*/
+
                 $projectArray = Union::with('projects')->findOrFail($unionId);
-                return Inertia::render("Union/UnionProjectDetails", ['projects' => $projects, 'projectArray' => $projectArray, 'union' => $union, 'student' => $student]);
+                //dd($projectArray);
+                if ($searchUnionProjectId == "searchUnionProject") {
+                    return Inertia::render("Union/SearchUnionProjectDetails", ['projects' => $projects, 'projectArray' => $projectArray, 'union' => $union, 'student' => $student]);
+                }
+                if ($searchUnionProjectId = "searchStudent") {
+                    return Inertia::render("Union/UnionProjectDetails", ['projects' => $projects, 'projectArray' => $projectArray, 'union' => $union, 'student' => $student]);
+                }
+            } else {
+                return "NO projects";
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            Log::error('Transaction Failed' . $e->getMessage());
+        }
+
+        //return Inertia::render("Union/UnionProjectDetails", ['projects' => $projects, 'union' => $union, 'student' => $student]);
+    }
+
+    public function index2(int $studentId, int $unionId)
+    {
+
+        $projects = [];
+        //$union = Union::findOrFail($unionId);
+        //dd($studentId);
+        //dd($unionId);
+        //$student = Student::findOrFail($studentId);
+        //dd($student);
+        try {
+            DB::beginTransaction();
+            $results = DB::select('select project_union_id from 
+            student_union_project where student_id=?', [$studentId]);
+            //dd($results);
+            if (!empty($results)) {
+                foreach ($results as $result) {
+                    $unionProjectId = $result->project_union_id;
+                    $projectIds = DB::select('select project_id from project_union 
+                    where id=? and union_id=? ', [$unionProjectId, $unionId]);
+
+                    //dd($projectIds);
+
+                    //no need of this loop one value of project_id contain in $projectIds
+                    //because in project_union table  different id do not have 
+                    //same project_id and union_id at same time
+                    foreach ($projectIds as $projectIdObj) {
+                        //dd($projectIdObj);
+                        //$projectId = $projectIdObj['project_id'];
+                        $projectId = $projectIdObj->project_id;
+
+                        $project = Project::findOrFail($projectId);
+                        //dd($project);
+                        $projects[] = $project;
+                    }
+                }
+                return response()->json(['projects' => $projects]);
+
+                //return Inertia::render("Union/UnionProjectDetails", ['projects' => $projects,  'union' => $union, 'student' => $student]);
+            } else {
+                return "NO projects";
             }
             DB::commit();
         } catch (\Exception $e) {
@@ -100,6 +169,8 @@ class UnionProjectController extends Controller
         $valicdtedData =  $request->validated();
         //dd($valicdtedData);
         $studentId = $student->id;
+
+        $reg_no = $student->reg_no;
 
 
         $unionId = $valicdtedData['union_id'];
@@ -166,7 +237,7 @@ class UnionProjectController extends Controller
         //$student->unions()->attach($unionId, $newStudentUnion);
 
         //$student->programs()->attach($request->programs);
-        return redirect()->route('union.index', $studentId);
+        return redirect()->route('union.searchUnion', $reg_no);
     }
 
 

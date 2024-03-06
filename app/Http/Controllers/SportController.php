@@ -21,13 +21,15 @@ class SportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(int $studentId)
+    public function index(int $regNo, String $searchSportId)
     {
         try {
             $sportId = [];
             $sportStudentDetails = [];
             DB::beginTransaction();
-            $student = Student::with('sports')->findOrFail($studentId);
+            //$student = Student::with('sports')->findOrFail($studentId);
+            $student = Student::with('sports')->where('reg_no', $regNo)->first();
+            $studentId = $student->id;
             //$studentSports = $student->sports()->with('Sport')->get();
             //dd($studentSports);
             if ($student === null) {
@@ -53,7 +55,13 @@ class SportController extends Controller
 
                 //dd($sportStudentDetails);
                 //dd($sportId);
-                return Inertia::render("Sport/SportAndAchievements", ['achievements' => $achievements, 'student' => $student, 'sports' => $sportStudentDetails, 'sportList' => $sportList]);
+
+                if ($searchSportId == "searchSportAndAchievement") {
+                    return Inertia::render("Sport/SearchSportAndAchievemet", ['achievements' => $achievements, 'student' => $student, 'sports' => $sportStudentDetails, 'sportList' => $sportList]);
+                }
+                if ($searchSportId = "searchStudent") {
+                    return Inertia::render("Sport/SportAndAchievements", ['achievements' => $achievements, 'student' => $student, 'sports' => $sportStudentDetails, 'sportList' => $sportList]);
+                }
 
                 //abort(404, 'User not found');
                 //return "user Found";
@@ -164,21 +172,10 @@ class SportController extends Controller
     {
         //dd($request);
         //dd($sportId);
+        $student = Student::findOrFail($studentId);
         $validatedRequest = $request->validated();
         $sport_id = $validatedRequest['sport_id'];
-        //dd($sport_id);
-        // $sport=Sport::FindOrFail($sport_id);
-        $student = Student::findOrFail($studentId);
-
-        $sport = $student->sports()->wherePivot('sport_id', $sportId)->first();
-        //dd($sport);
-        log::alert($sport);
-        // Check if the sport is already attached
-        $existingSport = $student->sports()->wherePivot('sport_id', $sport_id)->exists();
-        //dd($existingSport);
-        log::alert($existingSport);
-        if (!$existingSport) {
-            // Detach any existing sport
+        if ($sport_id == $sportId) {
             $student->sports()->detach($sportId);
 
             // Attach the new sport
@@ -189,8 +186,33 @@ class SportController extends Controller
 
             return response()->json([$attachSport], 201);
         } else {
-            return "previously attached";
+            $sport = $student->sports()->wherePivot('sport_id', $sportId)->first();
+            //dd($sport);
+            log::alert($sport);
+            // Check if the sport is already attached
+            $existingSport = $student->sports()->wherePivot('sport_id', $sport_id)->exists();
+            //dd($existingSport);
+            log::alert($existingSport);
+            if ($existingSport !== true) {
+                // Detach any existing sport
+                $student->sports()->detach($sportId);
+
+                // Attach the new sport
+                $attachSport = [
+                    'period' => $validatedRequest['period']
+                ];
+                $student->sports()->attach($sport_id, $attachSport);
+
+                return response()->json([$attachSport], 201);
+            } else {
+                return "previously attached";
+            }
         }
+        //dd($sport_id);
+        // $sport=Sport::FindOrFail($sport_id);
+
+
+
     }
 
     /**

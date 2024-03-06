@@ -14,25 +14,9 @@ const props = defineProps({
     }
 
 });
-const searchShowResultId = ref("searchStudent")
-// const { data, $inertia } = usePage();
-// const fetchExams = (url) => {
-//     const data = $inertia.visit(url);
-//     console.log(data, "data");
-// };
-// async function getexams(studentId) {
-//     try {
-//         unionsLoading.value = true;
 
-//         const response = await axios.get(route('exam.index', { student: studentId }));
-//         //console.log(response);
-//         exams = response.data.exams;  // Use .value to update the ref
-//         console.log(exams, '->exams');
-//         unionsLoading.value = false;
-//     } catch (e) {
-//         console.log(e, "project error");
-//     }
-// }
+const searchShowResultId = ref("searchShowResult")
+
 
 const laravelExam = ref({});
 
@@ -75,7 +59,6 @@ getResults();
 
 <template>
     <AuthenticatedLayout>
-        <NavForPages :student="student"></NavForPages>
         <div class="p-10">
 
             <!-- {{ student }}
@@ -92,24 +75,17 @@ getResults();
                         class="p-4 rounded-lg shadow-sm hover:shadow-lg invisible  absolute sm:flex sm:visible sm:pt-0 sm:ml-6">
                         <p class="  pl-4 font-medium text-md text-gray-500  font-large">{{ laravelStudent.first_name }}
                             {{
-            laravelStudent.last_name
-        }}
+                            laravelStudent.last_name
+                        }}
                             <br> {{
-                laravelStudent.reg_no }}
+                                laravelStudent.reg_no }}
                         </p>
                     </div>
                 </div>
                 <div>
                     <div class="grid justify-end sm:ml-0    mt-10">
 
-                        <button type="button"
-                            class="text-white mr-16 bg-rc-bondi-blue hover:bg-rc-bondi-blue2  font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 focus:outline-non">
 
-                            <Link :href="route('exam.create', { studentId: student.id })" method="get" as="button">Add
-                            New
-                            Exam Result</Link>
-
-                        </button>
                     </div>
                 </div>
             </div>
@@ -182,8 +158,7 @@ getResults();
                                             Result </p>
                                         </Link>
 
-                                        <Link
-                                            :href="route('exam.edit', { studentId: laravelStudent.id, examId: exam.id })"
+                                        <!-- <Link :href="route('exam.edit', { studentId: laravelStudent.id, examId: exam.id })"
                                             method="get" as="button">
                                         <a href="#"
                                             class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"><svg
@@ -212,7 +187,7 @@ getResults();
                                                     fill="#FF6868" />
                                             </svg>
                                         </p>
-                                        </Link>
+                                        </Link> -->
 
                                     </td>
                                 </tr>
@@ -231,6 +206,13 @@ getResults();
                 </div>
             </div>
 
+        </div>
+
+        <div class="p-4 flex justify-end">
+            <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">
+            back
+            </Link>
         </div>
     </AuthenticatedLayout>
 

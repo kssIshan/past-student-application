@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 //import NavForPages from '@/Layouts/NavForPages.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, Link } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -31,10 +31,12 @@ const form = useForm({
 
     <AuthenticatedLayout>
         <form @submit.prevent="form.post(route('student.store'))">
-            <div class=" pt-4">
+            <div>
                 <div class="pl-2">
-                    <a href="#"
-                        class="relative inline-flex items-center py-2 text-xs font-semibold text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">Home</a>
+                    <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                        class="relative inline-flex items-center py-2 text-xs font-semibold text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                    Home
+                    </Link>
                     <a href="#"
                         class="relative inline-flex items-center rounded-r-md pl-1  pt-2 py-2 text-gray-400  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
                         <span class="sr-only">Next</span>
@@ -53,9 +55,9 @@ const form = useForm({
                 </div>
                 <div>
                     <div class="flex flex-col space-y-4 ">
-                        <div class="ml-2 my-2 pl-3 shadow-lg pb-3 ">
-                            <div class="border-b border-gray-900/10">
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Basic Details</h2>
+                        <div class=" border-2 border-gray-900/10 m-8 pl-3 shadow-lg pb-3 ">
+                            <div>
+                                <h2 class="p-4 text-base font-semibold leading-7 text-gray-900">Basic Details</h2>
                                 <div class=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                     <!-- <div class="sm:col-span-3 w-screen pt-4">
                                         <label for="fullName" class="block text-sm font-medium leading-6 text-gray-900">Full
@@ -72,7 +74,7 @@ const form = useForm({
                                     <div class="lg:flex-1">
                                         <div class="sm:col-span-3">
                                             <label for="first_name"
-                                                class="block text-sm font-medium leading-6 text-gray-900">
+                                                class="m-2 block text-sm font-medium leading-6 text-gray-900">
                                                 First
                                                 Name
                                             </label>
@@ -85,16 +87,16 @@ const form = useForm({
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lg:flex-1 lg:pt-2">
+                                    <div class="lg:flex-1 ">
                                         <div
                                             class="sm:col-span-3 invisible sm:invisible lg:visible z-0 sm:z-0 sm:absolute absolute lg:w-[43%]">
                                             <label for="last_name"
-                                                class="block text-sm font-medium leading-6 text-gray-900">Last Name
+                                                class="m-2 block text-sm font-medium leading-6 text-gray-900">Last Name
                                             </label>
                                             <div class="mt-2">
                                                 <input type="text" name="last_name" v-model="form.last_name" id="last_name"
                                                     autocomplete="given-name"
-                                                    class="block w-[85%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                    class="block w-[95%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                     placeholder="Enter Last Name">
                                                 <InputError class="mt-2" :message="form.errors.last_name" />
                                             </div>
@@ -106,7 +108,7 @@ const form = useForm({
                                 <div class="lg:flex-1">
                                     <div class="sm:col-span-3">
                                         <label for="reg_no"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Registration
+                                            class="m-2 block text-sm font-medium leading-6 text-gray-900">Registration
                                             Number</label>
                                         <div class="mt-2">
                                             <input type="text" name="reg_no" id="reg_no" v-model="form.reg_no"
@@ -118,15 +120,15 @@ const form = useForm({
 
                                     </div>
                                 </div>
-                                <div class="lg:flex-1 lg:pt-2">
+                                <div class="lg:flex-1 ">
                                     <div
                                         class="sm:col-span-3 invisible sm:invisible lg:visible z-0 sm:z-0 sm:absolute absolute lg:w-[43%]">
-                                        <label for="nic" class="block text-sm font-medium leading-6 text-gray-900">NIC
+                                        <label for="nic" class="m-2 block text-sm font-medium leading-6 text-gray-900">NIC
                                             Number</label>
                                         <div class="mt-2">
                                             <input type="text" name="nic" id="nic" v-model="form.nic"
                                                 autocomplete="given-name"
-                                                class="block w-[85%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                class="block w-[95%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                 placeholder="977842330v">
                                             <InputError class="mt-2" :message="form.errors.nic" />
                                         </div>
@@ -145,7 +147,7 @@ const form = useForm({
                             <div class="lg:flex">
                                 <div class="lg:flex-1">
                                     <div class="sm:col-span-3">
-                                        <label for="dob" class="block text-sm font-medium leading-6 text-gray-900">
+                                        <label for="dob" class="m-2 block text-sm font-medium leading-6 text-gray-900">
                                             Date Of Birth</label>
                                         <div class="mt-2">
                                             <input type="date" name="dob" id="dob" v-model="form.dob"
@@ -156,16 +158,16 @@ const form = useForm({
                                         </div>
                                     </div>
                                 </div>
-                                <div class="lg:flex-1 lg:pt-2">
+                                <div class="lg:flex-1 ">
                                     <div
                                         class="sm:col-span-3 invisible sm:invisible lg:visible z-0 sm:z-0 sm:absolute absolute lg:w-[43%]">
                                         <label for="enrollement_date"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Enrollment
+                                            class="m-2 block text-sm font-medium leading-6 text-gray-900">Enrollment
                                             Date</label>
                                         <div class="mt-2">
                                             <input type="date" name="enrollement_date" v-model="form.date_of_admission"
                                                 id="enrollement_date" autocomplete="given-name"
-                                                class="block w-[85%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                class="block w-[95%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                 placeholder="977842330v">
                                             <InputError class="mt-2" :message="form.errors.date_of_admission" />
                                         </div>
@@ -177,12 +179,12 @@ const form = useForm({
                                 <div class="lg:flex-1">
                                     <div class="sm:col-span-3 invisible sm:invisible lg:visible z-0 sm:z-0  lg:w-[43%]">
                                         <label for="pass_out_date"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Pass
+                                            class="m-2 block text-sm font-medium leading-6 text-gray-900">Pass
                                             Out Date</label>
                                         <div class="mt-2">
                                             <input type="date" name="pass_out_date" v-model="form.date_of_leave"
                                                 id="pass_out_date" autocomplete="given-name"
-                                                class="block w-[85%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                class="block w-[102%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                 placeholder="977842330v">
                                             <InputError class="mt-2" :message="form.errors.date_of_leave" />
                                         </div>
@@ -193,17 +195,17 @@ const form = useForm({
 
                         </div>
 
-                        <div class="ml-3 my-2 px-3 shadow-lg pb-3">
-                            <div class="border-b border-gray-900/10">
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Contact Details</h2>
+                        <div class="border-2 border-gray-900/10 m-8 pl-3 shadow-lg pb-3">
+                            <div>
+                                <h2 class="p-4 text-base font-semibold leading-7 text-gray-900">Contact Details</h2>
                                 <div class=" grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                     <div class="sm:col-span-3 w-screen pt-4">
                                         <label for="address"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Address*</label>
+                                            class="m-2 block text-sm font-medium leading-6 text-gray-900">Address*</label>
                                         <div class="mt-2">
                                             <input type="text" name="address" v-model="form.address" id="address"
                                                 autocomplete="given-name"
-                                                class="block w-[70%] sm:w-[76%] lg:w-[75%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                class="block w-[70%] sm:w-[85%] lg:w-[87%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                 placeholder="172/1, Uthuru kirimetiana, Wennappuwa">
                                         </div>
                                     </div>
@@ -213,7 +215,7 @@ const form = useForm({
                                 <div class="lg:flex-1">
                                     <div class="sm:col-span-3">
                                         <label for="mobile_01"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Mobile
+                                            class="m-2 block text-sm font-medium leading-6 text-gray-900">Mobile
                                             Number 01*</label>
                                         <div class="mt-2">
                                             <input type="text" name="mobile_01" v-model="form.mobile_no" id="mobile_01"
@@ -223,16 +225,16 @@ const form = useForm({
                                         </div>
                                     </div>
                                 </div>
-                                <div class="lg:flex-1 lg:pt-1">
+                                <div class="lg:flex-1 ">
                                     <div
                                         class="sm:col-span-3 invisible sm:invisible lg:visible z-0 sm:z-0 sm:absolute absolute lg:w-[43%]">
                                         <label for="mobile_02"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Mobile
+                                            class="m-2 block text-sm font-medium leading-6 text-gray-900">Mobile
                                             Number 02*</label>
                                         <div class="mt-2">
                                             <input type="text" name="mobile_02" v-model="form.mobile_no2" id="mobile_02"
                                                 autocomplete="given-name"
-                                                class="block w-[85%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                class="block w-[95%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                 placeholder="+9471 2342344">
                                         </div>
                                     </div>
@@ -242,7 +244,8 @@ const form = useForm({
                             <div class="lg:flex">
                                 <div class="lg:flex-1">
                                     <div class="sm:col-span-3">
-                                        <label for="land_no" class="block text-sm font-medium leading-6 text-gray-900">Land
+                                        <label for="land_no"
+                                            class="m-2 block text-sm font-medium leading-6 text-gray-900">Land
                                             No</label>
                                         <div class="mt-2">
                                             <input type="text" name="land_no" v-model="form.land_no" id="land_no"
@@ -252,15 +255,15 @@ const form = useForm({
                                         </div>
                                     </div>
                                 </div>
-                                <div class="lg:flex-1 lg:pt-1">
+                                <div class="lg:flex-1 ">
                                     <div
                                         class="sm:col-span-3 invisible sm:invisible lg:visible z-0 sm:z-0 sm:absolute absolute lg:w-[43%]">
                                         <label for="email"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+                                            class="m-2 block text-sm font-medium leading-6 text-gray-900">Email</label>
                                         <div class="mt-2">
                                             <input type="text" name="email" v-model="form.email" id="email"
                                                 autocomplete="given-name"
-                                                class="block w-[85%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                class="block w-[95%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                 placeholder="student@gmail.com">
                                         </div>
                                     </div>
@@ -270,11 +273,20 @@ const form = useForm({
 
                             <div>
                                 <div class="mt-6 flex items-center justify-end gap-x-6 pr-5">
-                                    <button type="button"
-                                        class="text-sm font-semibold leading-6 text-gray-900 shadow-inner">Cancel</button>
+                                    <!-- <button type="button"
+                                        class="text-sm font-semibold leading-6 text-gray-900 shadow-inner">Cancel</button> -->
+                                    <!-- <button>
+                                        <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                                            class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded">
+                                        Cancel
+                                        </Link>
+                                    </button>
                                     <button type="submit"
-                                        class="rounded-md bg-indigo-600 pl-3 py-2 pr-4 text-sm font-semibold text-white  hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
+                                        class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">Submit</button>
+                                     -->
                                     <!-- <PrimaryButton :disabled="form.processing">Save</PrimaryButton> -->
+
+
                                 </div>
                             </div>
                         </div>
@@ -282,74 +294,15 @@ const form = useForm({
                 </div>
 
 
-                <!-- <div class="py-12">
-                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6 text-gray-900">Add Student</div>
-                        <form @submit.prevent="form.post(route('student.store'))" class="mt-6 space-y-6">
-
-                            <div>
-                                <InputLabel for="reg_no" value="Registration no" />
-                                <input type="text" id="reg_no" v-model="form.reg_no" />
-                                <InputError class="mt-2" :message="form.errors.reg_no" />
-                            </div>
-                            <div>
-                                <InputLabel for="firstName" value="Fast Name" />
-                                <input type="text" id="firstName" v-model="form.first_name" />
-                                <InputError class="mt-2" :message="form.errors.first_name" />
-                            </div>
-                            <div>
-                                <InputLabel for="last_name" value="Last Name" />
-                                <input type="text" v-model="form.last_name">
-                                <InputError class="mt-2" :message="form.errors.last_name" />
-                            </div>
-                            <div>
-                                <InputLabel for="dob" value="Date of Birth" />
-                                <input type="date" v-model="form.dob">
-                                <InputError class="mt-2" :message="form.errors.dob" />
-                            </div>
-                            <div>
-                                <InputLabel for="date_of_admission" value="Admission date" />
-                                <input type="date" v-model="form.date_of_admission">
-                                <InputError class="mt-2" :message="form.errors.date_of_admission" />
-                            </div>
-                            <div>
-                                <InputLabel for="date_of_leave" value="Pass Out Date" />
-                                <input type="date" v-model="form.date_of_leave">
-                                <InputError class="mt-2" :message="form.errors.date_of_leave" />
-                            </div>
-                            <div>
-                                <InputLabel for="address" value="Address" />
-                                <input type="text" v-model="form.address">
-                                <InputError class="mt-2" :message="form.errors.address" />
-                            </div>
-                            <div>
-                                <InputLabel for="email" value="Email" />
-                                <input type="text" v-model="form.email">
-                                <InputError class="mt-2" :message="form.errors.email" />
-                            </div>
-                            <div>
-                                <InputLabel for="mobile_no" value="Mobile No" />
-                                <input type="text" v-model="form.mobile_no">
-                                <InputError class="mt-2" :message="form.errors.mobile_no" />
-                            </div>
-                            <div>
-                                <InputLabel for="land_no" value="Land No" />
-                                <input type="text" v-model="form.land_no">
-                                <InputError class="mt-2" :message="form.errors.land_no" />
-                            </div>
-
-
-
-                            <div class="flex items-center gap-4">
-                                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
-
-                                
-                            </div>
-                        </form>
-                    </div>
+                <div class="p-6 sm:mt-12 lg:mt-12 flex items-center gap-x-6 justify-end lg:mr-16  sm:mr-20">
+                    <button type="button"
+                        class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded">
+                        <Link :href="route('dashboard')" :active="route().current('dashboard')"> Cancel
+                        </Link>
+                    </button>
+                    <button type="submit"
+                        class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">Submit</button>
                 </div>
-            </div> -->
             </div>
         </form>
 

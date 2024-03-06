@@ -16,6 +16,8 @@ const showProject = ref(false);
 //let error = reactive([]);
 let projects = reactive([]);
 
+const searchUnionId = ref("searchStudent");
+
 const props = defineProps({
     studentUnion: {
         type: Object
@@ -103,24 +105,24 @@ const addResult = () => {
 </script>
 
 <template>
-    <Head title="Add Union" />
+
+    <Head title="Edit Union" />
     <AuthenticatedLayout>
 
         <!-- <form action="#"> -->
         <!-- <div>{{ unions }}</div>
         <div>{{ projects }}</div> -->
-        <div class="ml-8">
+        <div>
             <div class="relative invisible sm:visible sm:mt-4">
 
 
                 <nav class="flex" aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                         <li class="inline-flex items-center">
-                            <a href="#"
-                                class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:hover:text-white">
-
-                                Home
-                            </a>
+                            <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                                class="relative inline-flex items-center py-2 text-xs font-semibold text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                            Home
+                            </Link>
                         </li>
                         <li>
                             <div class="flex items-center">
@@ -129,8 +131,10 @@ const addResult = () => {
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                         stroke-width="2" d="m1 9 4-4-4-4" />
                                 </svg>
-                                <a href="#"
-                                    class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:hover:text-white">Education</a>
+                                <Link
+                                    :href="route('union.searchUnion', { regNo: props.student.reg_no, searchUnionId: searchUnionId })"
+                                    class="relative inline-flex items-center py-2 text-xs font-font-medium text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                Union details </Link>
                             </div>
                         </li>
                         <li aria-current="page">
@@ -140,7 +144,7 @@ const addResult = () => {
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                         stroke-width="2" d="m1 9 4-4-4-4" />
                                 </svg>
-                                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Add New
+                                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Edit
                                     Union </span>
                             </div>
                         </li>
@@ -158,19 +162,21 @@ const addResult = () => {
                 </a>
             </div>
             <div>
-                <h1 class="text-rc-eastern-blue text-lg sm:text-3xl pt-3 pb-3"> Add New Union </h1>
+                <h1 class="text-rc-eastern-blue text-lg sm:text-3xl pl-4 pt-3 pb-3"> Edit Union </h1>
             </div>
             <div>
                 <form
                     @submit.prevent="form.put(route('unionProject.update', { studentId: student.id, unionId: union.id }))">
-                    <div class="shadow pt-5 pl-4 pr-3 pb-10 mb-2 mt-2">
+                    <div class="border-2 border-gray-900/10 m-8 pl-3 shadow-lg pb-3">
                         <div>
-                            <h2 class="pb-3"><b>Student Union Details</b></h2>
+                            <h2 class="p-4 text-base font-semibold leading-7 text-gray-900"><b>Student Union Details</b>
+                            </h2>
                         </div>
                         <div class="lg:flex  lg:mt-10 ">
                             <div class="lg:flex-1">
                                 <div class="sm:col-span-3">
-                                    <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">Union
+                                    <label for="first-name"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Union
                                         Name*
                                     </label>
                                     <div class="mt-2">
@@ -195,7 +201,7 @@ const addResult = () => {
                                                     <div>
 
                                                         <label for="datepicker"
-                                                            class="block text-sm font-medium leading-6 text-gray-900">Join
+                                                            class="block mb-3 text-sm font-medium leading-6 text-gray-900">Join
                                                             Date</label>
                                                         <div class="relative">
 
@@ -220,7 +226,7 @@ const addResult = () => {
                                         <div class="container py-2">
                                             <div>
                                                 <label for="datepicker"
-                                                    class="block text-sm font-medium leading-6 text-gray-900">Join
+                                                    class="block mb-2 text-sm font-medium leading-6 text-gray-900">Join
                                                     Date</label>
                                                 <div class="relative">
                                                     <input type="date" readonly x-model="datepickerValue"
@@ -246,7 +252,6 @@ const addResult = () => {
                                     placeholder="">
                             </div>
                         </div>
-
                         <div class="lg:flex">
                             <div class="lg:flex-1">
                                 <div
@@ -259,19 +264,15 @@ const addResult = () => {
                                             class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6">
                                     </div>
                                 </div>
-
                             </div>
                             <div class="lg:flex-1">
                                 <div>
-
-
                                     <div class="antialiased sans-serif">
                                         <div>
                                             <div class="container py-2">
                                                 <div>
-
                                                     <label for="datepicker"
-                                                        class="block text-sm font-medium leading-6 text-gray-900">Leave
+                                                        class="block mb-3 text-sm font-medium leading-6 text-gray-900">Leave
                                                         Date</label>
                                                     <div class="relative">
                                                         <!-- <input type="hidden" name="date" x-ref="date"> -->
@@ -279,12 +280,9 @@ const addResult = () => {
                                                             class="block w-[96%] sm:w-[88%] lg:w-[83%] rounded-md border-0 py-1.5 text-gray-500 ring-1 placeholder:text-xs ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6">
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -292,21 +290,20 @@ const addResult = () => {
                             <div class="lg:flex-1">
 
                                 <div
-                                    class="sm:col-span-3 invisible sm:invisible lg:visible z-0 sm:z-0  lg:w-[50%] sm:w-[50%]">
+                                    class="sm:col-span-3 mt-4 invisible sm:invisible lg:visible z-0 sm:z-0  lg:w-[50%] sm:w-[50%]">
                                     <label class="block text-sm font-medium leading-6 text-gray-900">Position</label>
                                     <div class="mt-2">
-                                        <input type="text" v-model="form.position" id="first-name" autocomplete="given-name"
+                                        <input type="text" v-model="form.position" id="first-name"
+                                            autocomplete="given-name"
                                             class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6">
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                     <div class="lg:flex">
                         <div class="sm:col-span-3 w-screen visible sm:visible lg:invisible lg:absolute">
-                            <label class="block text-sm font-medium leading-6 text-gray-900">Position</label>
+                            <label class="block  text-sm font-medium leading-6 text-gray-900">Position</label>
                             <div class="mt-2">
                                 <input type="text" v-model="form.position" id="first-name" autocomplete="given-name"
                                     class="block w-[85%] lg:w-[83%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6">
@@ -315,7 +312,7 @@ const addResult = () => {
                     </div>
 
 
-                    <div class="shadow pt-5 pl-4 pr-3 pb-10 mb-2 mt-2">
+                    <div class="border-2 border-gray-900/10 m-8 pl-3 shadow-lg pb-3">
                         <div>
                             <h2 class="pb-3"><b> Union Project Details</b></h2>
                         </div>
@@ -394,7 +391,8 @@ const addResult = () => {
                                                             class="mt-6 sm:mt-12 lg:mt-12 flex items-center gap-x-6 justify-end lg:mr-16 mr-5 sm:mr-20">
                                                             <button
                                                                 class="text-white bg-rc-java hover:bg-rc-java-300 focus:ring-4 b ring-1 ring-inset focus:outline-none focus:ring-rcjava ring-rc-java font-medium text-lg rounded-lg text-sm px-6 py-2 text-center inline-flex items-center dark:bg-rc-java dark:hover:bg-rc-java dark:focus:ring-rc-java"
-                                                                type="button" @click="removeProject(p.id)">Remove</button>
+                                                                type="button"
+                                                                @click="removeProject(p.id)">Remove</button>
                                                         </div>
 
                                                     </div>
@@ -410,7 +408,7 @@ const addResult = () => {
                                         </div>
 
                                     </div>
-                                    <div class="p-10" @click="toggleShowProject()">
+                                    <div class="p-2" @click="toggleShowProject()">
                                         <span v-if="showProject"><button
                                                 class=" text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded"
                                                 type="button">Less</button></span>
@@ -641,12 +639,17 @@ const addResult = () => {
                                 placeholder="">
                         </div>
                     </div> -->
-                        <div class="mt-6 sm:mt-12 lg:mt-12 flex items-center gap-x-6 justify-end lg:mr-16 mr-5 sm:mr-20">
-                            <button type="button"
-                                class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded">Cancel</button>
-                            <button type="submit"
-                                class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">Submit</button>
-                        </div>
+
+                    </div>
+                    <div class="m-4 sm:mt-12 lg:mt-12 flex items-center gap-x-6 justify-end lg:mr-16 mr-5 sm:mr-20">
+                        <button type="button"
+                            class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded">
+                            <Link
+                                :href="route('union.searchUnion', { regNo: props.student.reg_no, searchUnionId: searchUnionId })">
+                            Cancel
+                            </Link>
+                        </button> <button type="submit"
+                            class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">Submit</button>
                     </div>
                 </form>
 

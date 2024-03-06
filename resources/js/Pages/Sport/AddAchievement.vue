@@ -3,6 +3,8 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import NavForPages from '@/Layouts/NavForPages.vue';
+import { ref } from 'vue'
+
 
 const props = defineProps({
     sports: {
@@ -15,7 +17,7 @@ const props = defineProps({
         type: Object
     }
 })
-
+const searchSportId = ref("searchStudent");
 const form = useForm({
     //student_id: props.student.id,
     sport_id: null,
@@ -30,21 +32,21 @@ const form = useForm({
 </script>
 
 <template>
+
     <Head title="Add Union" />
     <AuthenticatedLayout>
         <NavForPages :student="student"> </NavForPages>
 
         <div class=" w-screen">
-            <div class="ml-8">
-                <div class="relative invisible sm:visible sm:mt-4">
+            <div>
+                <div class="relative invisible sm:visible ml-3 sm:mt-4">
                     <nav class="flex" aria-label="Breadcrumb">
                         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                             <li class="inline-flex items-center">
-                                <a href="#"
-                                    class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-
-                                    Home
-                                </a>
+                                <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                                    class="relative inline-flex items-center py-2 text-xs font-semibold text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                Home
+                                </Link>
                             </li>
                             <li>
                                 <div class="flex items-center">
@@ -53,8 +55,10 @@ const form = useForm({
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                             stroke-width="2" d="m1 9 4-4-4-4" />
                                     </svg>
-                                    <a href="#"
-                                        class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Education</a>
+                                    <Link
+                                        :href="route('sport.index', { regNo: props.student.reg_no, searchSportId: searchSportId })"
+                                        class="relative inline-flex items-center py-2 text-xs font-semibold text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                    Sports & Achievements </Link>
                                 </div>
                             </li>
                             <li aria-current="page">
@@ -64,7 +68,8 @@ const form = useForm({
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                             stroke-width="2" d="m1 9 4-4-4-4" />
                                     </svg>
-                                    <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Add New
+                                    <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Add
+                                        New
                                         Ahievement</span>
                                 </div>
                             </li>
@@ -72,12 +77,14 @@ const form = useForm({
                     </nav>
                 </div>
                 <div>
-                    <h1 class="text-rc-eastern-blue text-lg sm:text-3xl pt-3 pb-3"> Add New Achievement</h1>
+                    <h1 class="text-rc-eastern-blue ml-4 text-lg sm:text-3xl pt-3 pb-3"> Add New Achievement</h1>
                 </div>
                 <form @submit.prevent="form.post(route('achievement.store', { studentId: student.id }))">
-                    <div>
+                    <div class=" border-2 border-gray-900/10 m-8 pl-3 shadow-lg pb-3 ">
+
                         <div class="sm:col-span-3">
-                            <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">Achievement
+                            <label for="first-name"
+                                class="block mt-4 text-sm font-medium leading-6 text-gray-900">Achievement
                                 Name*
                             </label>
                             <div>
@@ -121,8 +128,8 @@ const form = useForm({
                                 <label for="first-name"
                                     class="block text-sm font-medium leading-6  text-gray-900">Status</label>
                                 <div class="mt-2">
-                                    <input v-model="form.achievement_status" type="text" name="first-name" id="first-name"
-                                        autocomplete="given-name"
+                                    <input v-model="form.achievement_status" type="text" name="first-name"
+                                        id="first-name" autocomplete="given-name"
                                         class="block w-[81%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rc-java sm:text-sm sm:leading-6"
                                         placeholder="">
                                     <InputError class="mt-2" :message="form.errors.achievement_status" />
@@ -164,7 +171,7 @@ const form = useForm({
                                             </select>
 
                                         </div>
-                                        <InputError class="mt-2" :message="form.errors.sport_id" />
+                                        <InputError class="mt-2" :message="form.errors.sport_name" />
                                     </div>
                                 </div>
                             </div>
@@ -236,20 +243,17 @@ const form = useForm({
                                 </div>
                             </div>
 
-
-
-
-
-                            <div>
-                                <div class="mt-6 flex items-center gap-x-6 justify-end lg:mr-20 sm:m-5 ">
-                                    <button type="button"
-                                        class="text-sm font-semibold leading-6 text-gray-900 shadow-inner">Cancel</button>
-                                    <button type="submit"
-                                        class="rounded-md bg-indigo-600 pl-3 py-2 pr-4 text-sm font-semibold text-white  hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
-                                </div>
-                            </div>
-
                         </div>
+                    </div>
+                    <div class="mt-6 sm:mt-12 lg:mt-12 flex items-center gap-x-6 justify-end lg:mr-16 mr-5 sm:mr-20">
+                        <button type="button"
+                            class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded">
+                            <Link
+                                :href="route('sport.index', { regNo: props.student.reg_no, searchSportId: searchSportId })">
+                            Cancel
+                            </Link>
+                        </button> <button type="submit"
+                            class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">Submit</button>
                     </div>
                 </form>
 

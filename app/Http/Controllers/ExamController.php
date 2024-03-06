@@ -21,18 +21,49 @@ class ExamController extends Controller
         $subjects = Subject::all();
         return Inertia::render("Education/AddEducation", ['student' => $student, 'subjects' => $subjects]);
     }
-    //show exam details of selected student
-    public function index(int $studentId)
+    //render the page
+    public function index1(int $regNo, String $searchEducationId)
+    //public function index1()
     {
 
-        $student = Student::with('exams')->findOrFail($studentId);
-        //$exams = DB::select('select * from exams where student_id=?', [$studentId]);
-        $exams = $student->exams;
+        //$student = Student::findOrFail($studentId);
+        $student = Student::where('reg_no', $regNo)->first();
 
-        return Inertia::render("Education/EducationDetails", ['exams' => $exams, 'student' => $student]);
+        if ($student === null) {
+            return "no studnet union found";
+        } else {
+
+
+            if ($searchEducationId == "searchEducation") {
+                return Inertia::render("Education/SearchEducationDetails", ['student' => $student]);
+            }
+            if ($searchEducationId = "searchStudent") {
+                return Inertia::render("Education/EducationDetails", ['student' => $student]);
+            }
+        }
+
+
+
+        //$exams = $student->exams()->paginate(1); // Paginate the exams, assuming 10 exams per page
+
+        //return Inertia::render("Education/EducationDetails");
+
+    }
+
+    //show exam details of selected student
+    public function index2(int $studentId)
+    {
+
+        //$student = Student::with('exams')->findOrFail($studentId);
+        $student = Student::findOrFail($studentId);
+
+        $exams = $student->exams()->paginate(1); // Paginate the exams, assuming 10 exams per page
+
+        return response()->json(['student' => $student, 'exams' => $exams]);
+        //return Inertia::render("Education/EducationDetails", ['exams' => $exams, 'student' => $student]);
     }
     //show exam details and result of a particular exam
-    public function showresult(int $studentId, int $examId)
+    public function showresult(int $studentId, int $examId, String $searchShowResultId)
     {
 
         $exam = Exam::with('results')->findOrFail($examId);
@@ -61,7 +92,13 @@ class ExamController extends Controller
         //dd($subjectName);
         $student = Student::findOrFail($studentId);
 
-        return Inertia::render("Education/ShowResult", ['exam' => $exam, 'subjects' => $subjects,  'student' => $student]);
+
+        if ($searchShowResultId == "searchShowResult") {
+            return Inertia::render("Education/SearchShowResult", ['exam' => $exam, 'subjects' => $subjects,  'student' => $student]);
+        }
+        if ($searchShowResultId = "searchStudent") {
+            return Inertia::render("Education/ShowResult", ['exam' => $exam, 'subjects' => $subjects,  'student' => $student]);
+        }
     }
     //store exam details of selected student
     public function store(ExamSaveRequest $request, int $studentId)

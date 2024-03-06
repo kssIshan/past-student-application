@@ -19,6 +19,9 @@ const props = defineProps({
     }
 
 });
+
+const searchEducationId = ref("searchStudent")
+
 const removeResult = (index) => {
     form.results.splice(index, 1);
 }
@@ -63,43 +66,47 @@ const form = useForm({
 });*/
 
 </script>
+
 <template>
+
     <Head title="Add Exam" />
     <AuthenticatedLayout>
         <!-- <div>{{ exam }}</div>
         <div>{{ subjects }}</div>
          -->
+
         <div class="relative invisible sm:visible sm:mt-4 ml-4">
 
 
             <nav class="flex" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                     <li class="inline-flex items-center">
-                        <a href="#"
-                            class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-
-                            Home
-                        </a>
+                        <Link :href="route('dashboard')" :active="route().current('dashboard')"
+                            class="relative inline-flex items-center py-2 text-xs font-semibold text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                        Home
+                        </Link>
                     </li>
                     <li>
                         <div class="flex items-center">
                             <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 9 4-4-4-4" />
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 9 4-4-4-4" />
                             </svg>
-                            <a href="#"
-                                class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Education</a>
+                            <Link
+                                :href="route('exam.index1', { regNo: props.student.reg_no, searchEducationId: searchEducationId })"
+                                class="relative inline-flex items-center py-2 text-xs font-semibold text-rc-gunsmoke  ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                            Education </Link>
                         </div>
                     </li>
                     <li aria-current="page">
                         <div class="flex items-center">
                             <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 9 4-4-4-4" />
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 9 4-4-4-4" />
                             </svg>
-                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Add New
+                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Edit
                                 Exam</span>
                         </div>
                     </li>
@@ -121,13 +128,15 @@ const form = useForm({
             <div>
                 <h1 class="text-rc-eastern-blue text-lg sm:text-3xl pt-3 pb-3 pl-4"> Edit Exam Details</h1>
             </div>
+            <form @submit.prevent="form.put(route('exam.update', { studentId: student.id, examId: exam.id }))">
 
-            <div class=" shadow-inner">
-                <div class="ml-3 my-2 px-3  pb-3">
-                    <h2 class="text-base font-semibold leading-7 text-gray-900 text-2xl lg:text-3xl pb-5">Exam Details</h2>
+                <div class=" border-2 border-gray-900/10 m-8 pl-3 shadow-lg pb-3 ">
+                    <div class="ml-3 my-2 px-3  pb-3">
+                        <h2 class="text-base font-semibold leading-7 text-gray-900 text-2xl lg:text-3xl pb-5">Exam
+                            Details
+                        </h2>
 
-                </div>
-                <form @submit.prevent="form.put(route('exam.update', { studentId: student.id, examId: exam.id }))">
+                    </div>
 
                     <div class="lg:flex sm:flex ">
                         <div class="lg:flex-1 sm:flex-1">
@@ -159,8 +168,7 @@ const form = useForm({
                                 <div class="mt-2">
                                     <input type="text" name="first-name" v-model="form.index_no" id="first-name"
                                         autocomplete="given-name"
-                                        class="block w-[85%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        placeholder="+9471 2342344">
+                                        class="block w-[85%]  rounded-md border-0 py-1.5 text-gray-900 ring-1 sm:my-5 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     <InputError class="mt-2" :message="form.errors.index_no" />
                                 </div>
                             </div>
@@ -175,8 +183,7 @@ const form = useForm({
                                 <div class="mt-2">
                                     <input type="text" name="first-name" v-model="form.exam_year" id="first-name"
                                         autocomplete="given-name"
-                                        class="block sm:w-[80%] w-[95%] lg:w-[88%] rounded-md border-0 py-1.5 text-gray-900 sm:my-5 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        placeholder="+94272342344">
+                                        class="block sm:w-[80%] w-[95%] lg:w-[88%] rounded-md border-0 py-1.5 text-gray-900 sm:my-5 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     <InputError class="mt-2" :message="form.errors.exam_year" />
                                 </div>
                             </div>
@@ -215,8 +222,7 @@ const form = useForm({
                                 <div class="mt-2">
                                     <input type="text" name="first-name" v-model="form.island_rank" id="first-name"
                                         autocomplete="given-name"
-                                        class="block sm:w-[80%] w-[95%] sm:my-5 lg:w-[88%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        placeholder="+94272342344">
+                                        class="block sm:w-[80%] w-[95%] sm:my-5 lg:w-[88%] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     <InputError class="mt-2" :message="form.errors.island_rank" />
                                 </div>
                             </div>
@@ -255,8 +261,7 @@ const form = useForm({
                                 <div class="mt-2">
                                     <input type="text" name="first-name" v-model="form.z_score" id="first-name"
                                         autocomplete="given-name"
-                                        class="block sm:w-[80%] w-[95%] lg:w-[88%] sm:my-5 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        placeholder="+94272342344">
+                                        class="block sm:w-[80%] w-[95%] lg:w-[88%] sm:my-5 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     <InputError class="mt-2" :message="form.errors.z_score" />
                                 </div>
                             </div>
@@ -287,8 +292,7 @@ const form = useForm({
                                 <div class="mt-2">
                                     <input type="text" name="first-name" v-model="form.subject_stream" id="first-name"
                                         autocomplete="given-name"
-                                        class="block sm:w-[80%] w-[95%] lg:w-[88%] sm:my-5 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        placeholder="+94272342344">
+                                        class="block sm:w-[80%] w-[95%] lg:w-[88%] sm:my-5 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     <InputError class="mt-2" :message="form.errors.subject_stream" />
                                 </div>
                             </div>
@@ -310,62 +314,65 @@ const form = useForm({
                             </div>
                         </div>
                     </div>
-                    <div class="ml-3 my-2 px-3 shadow-inner  pb-3">
-                        <h2 class="text-base font-semibold leading-7 text-gray-900 text-2xl lg:text-3xl pb-5">Exam Results
-                        </h2>
+                    <div class=" border-2 border-gray-900/10 m-8 pl-3 shadow-lg pb-3">
+                        <div class="ml-3 my-2 px-3 shadow-inner  pb-3">
+                            <h2 class="text-base font-semibold leading-7 text-gray-900 text-2xl lg:text-3xl pb-5">Exam
+                                Results
+                            </h2>
 
-                    </div>
-                    <div class="flex-column justify-between sm:justify-around">
+                        </div>
+                        <div class="grid grid-cols-2 flex-column justify-between sm:justify-around">
 
-                        <div v-for="(result, index) in form.results" :key="index" class="flex items-center gap-4">
-                            <div>
-                                <div>Count</div>
-                                <div><input type="text" name="first-name" id="first-name" autocomplete="given-name"
-                                        class="w-10 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        placeholder="01"></div>
-                            </div>
-                            <div>
-                                <!-- <InputLabel :for="'subject' + index" :value="'Subject ' + (index + 1)" /> -->
-                                <label>
-                                    Subject</label>
+                            <div v-for="(result, index) in form.results" :key="index" class="flex items-center gap-4">
                                 <div>
+                                    <div>Count</div>
+                                    <div><input type="text" name="first-name" id="first-name" autocomplete="given-name"
+                                            class="w-10 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            placeholder="01"></div>
+                                </div>
+                                <div>
+                                    <!-- <InputLabel :for="'subject' + index" :value="'Subject ' + (index + 1)" /> -->
+                                    <label>
+                                        Subject</label>
+                                    <div>
+
+                                        <select
+                                            class="w-50 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            v-model="result.subject_id">
+                                            <option v-for=" subject in subjects" :value="subject.id">
+                                                {{ subject.name }}
+                                                {{ subject.code }}
+                                            </option>
+                                        </select>
+
+                                    </div>
+
+
+                                </div>
+                                <div>
+                                    <div>
+                                        <label> Grade</label>
+                                    </div>
 
                                     <select
                                         class="w-50 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        v-model="result.subject_id">
-                                        <option v-for=" subject in subjects" :value="subject.id">
-                                            {{ subject.name }}
-                                            {{ subject.code }}
-                                        </option>
+                                        v-model="result.grade">
+                                        <option>A</option>
+                                        <option>B</option>
+                                        <option>C</option>
+                                        <option>S</option>
+                                        <option>F</option>
                                     </select>
-
                                 </div>
-
-
+                                <button
+                                    class="text-white bg-rc-java hover:bg-rc-java-300 focus:ring-4 b ring-1 ring-inset focus:outline-none focus:ring-rcjava ring-rc-java font-medium text-lg rounded-lg text-sm px-6 py-2 text-center inline-flex items-center dark:bg-rc-java dark:hover:bg-rc-java dark:focus:ring-rc-java"
+                                    type="button" v-if="index >= 0" @click="removeResult(index)">Remove</button>
+                                <button
+                                    class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded"
+                                    type="button" v-if="index <= 9" @click="addResult">Add</button>
                             </div>
-                            <div>
-                                <div>
-                                    <label> Grade</label>
-                                </div>
-
-                                <select
-                                    class="w-50 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-xs placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    v-model="result.grade">
-                                    <option>A</option>
-                                    <option>B</option>
-                                    <option>C</option>
-                                    <option>S</option>
-                                    <option>F</option>
-                                </select>
+                            <div class="mt-2">
                             </div>
-                            <button
-                                class="text-white bg-rc-java hover:bg-rc-java-300 focus:ring-4 b ring-1 ring-inset focus:outline-none focus:ring-rcjava ring-rc-java font-medium text-lg rounded-lg text-sm px-6 py-2 text-center inline-flex items-center dark:bg-rc-java dark:hover:bg-rc-java dark:focus:ring-rc-java"
-                                type="button" v-if="index > 0" @click="removeResult(index)">Remove</button>
-                            <button
-                                class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded"
-                                type="button" v-if="index < 9" @click="addResult">Add</button>
-                        </div>
-                        <div class="mt-2">
                         </div>
                     </div>
 
@@ -374,16 +381,19 @@ const form = useForm({
                     <!-- <div class="flex items-center gap-4">
             <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
         </div> -->
-                    <div>
-                        <div class="mt-6 flex items-center gap-x-6 justify-end lg:mr-20 sm:m-5 ">
-                            <button type="button"
-                                class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded">Cancel</button>
-                            <button type="submit"
-                                class="rounded-md bg-rc-bondi-blue pl-3 py-2 pr-4 text-sm font-semibold text-white  hover:bg-rc-bondi-blue2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Update</button>
-                        </div>
+                    <div class="mt-6 sm:mt-12 lg:mt-12 flex items-center gap-x-6 justify-end lg:mr-16 mr-5 sm:mr-20">
+                        <button type="button"
+                            class="text-sm font-semibold leading-6 text-gray-900 shadow-inner sm:px-10 px-5 border-2 border-rc-java py-1 rounded">
+                            <Link
+                                :href="route('exam.index1', { regNo: props.student.reg_no, searchEducationId: searchEducationId })">
+                            Cancel
+                            </Link>
+                        </button> <button type="submit"
+                            class="rounded-md bg-rc-java sm:px-10 sm:py-2 py-1 px-5 text-sm font-semibold text-white  hover:bg-rc-bondi-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:rc-bondi-blue2">Update</button>
                     </div>
-                </form>
-            </div>
+
+                </div>
+            </form>
 
         </div>
 
